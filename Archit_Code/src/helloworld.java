@@ -24,14 +24,12 @@ public class helloworld
 			Thread.sleep(1000);
 		}
 		
-		/*
-		for(int i = 2; i < 400; i = i*i)
+		for(int i = 2; i < 500; i = i*i)
 		{
 			Motor.A.setSpeed(i);
 			Motor.B.setSpeed(i);
-			Thread.sleep(30);
+			Thread.sleep(400);
 		}
-		*/
 		
 		Button.waitForPress();
 		Motor.A.backward();
