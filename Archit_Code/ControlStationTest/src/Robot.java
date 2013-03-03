@@ -1,8 +1,9 @@
 import java.util.ArrayList;
-
+import java.util.Random;
 
 public class Robot
 {
+	private Random generator = new Random();
 	private String[] initialMessages = {"MSF0000000", "MSB0000000", "TNL0000000", 
 			"TNR0000000", "MAFL000000", "MAFR000000", "MABL000000", "MABR000000",
 			"ST00000000", "RS30000000", "RS40000000"};
@@ -27,5 +28,15 @@ public class Robot
 //		}
 //		return false;
 		return messages.contains(message);
+	}
+	
+	private int randomIndex()
+	{
+		return generator.nextInt(messages.size());
+	}
+	
+	public String randomMessage()
+	{
+		return messages.get(randomIndex());
 	}
 }
