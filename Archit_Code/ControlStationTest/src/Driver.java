@@ -2,34 +2,37 @@ import java.util.Random;
 
 public class Driver
 {
-	static Random generator = new Random();
-	private static String randomString()
+	static Random rand = new Random();
+	private static String randomAlphanumericString()
 	{
-
 		char word[] = new char[10];
 		for(int i = 0; i < 10; i++)
 		{
-			word[i] = (char) ((generator.nextInt(26)) + 65);
+			if(rand.nextInt(2) == 1)
+				word[i] = (char) ((rand.nextInt(26)) + 65);
+			else
+				word[i] = (char) ((rand.nextInt(10)) + 48);
 		}
-		return String.valueOf(word);
+		return new String(word);
+	}
+	private static String randomString()
+	{
+		char word[] = new char[10];
+		for(int i = 0; i < 10; i++)
+		{
+				word[i] = (char)(rand.nextInt(256));
+		}
+		return new String(word);
 	}
 
-	public static void main(String[] args)
+	public static void main(String[] args) throws InterruptedException
 	{
 		String temp = "";
 		Robot robot = new Robot();
-		System.out.println("robot.isValidMessage(\"STEELE\")\n" + robot.isValidMessage("STEELE"));
-		System.out.println("robot.isValidMessage(\"MAFR000000\")\n" + robot.isValidMessage("MAFR000000"));
-		System.out.println("robot.isValidMessage(\"MAFR00000\")\n" + robot.isValidMessage("MAFR00000"));
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 100; i++)
 		{
-			if(generator.nextInt()%5 == 0)
-			{
-				temp = randomString();
-			}
-			System.out.println("robot.isValidMessage(\"" + temp + "\")\n" + robot.isValidMessage(temp));
+			System.out.println(robot.sendMessage());
 		}
-
 	}
 
 }
