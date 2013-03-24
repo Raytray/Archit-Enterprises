@@ -1,5 +1,9 @@
 public class UltrasonicSensor implements SensorInterface {
     private int value;
-    public int getValue();
-    public boolean setValue(int v);
+    public int getValue(){
+    	return 0;
+    }
+    public boolean setValue(int v){
+    	return true;
+    }
 }

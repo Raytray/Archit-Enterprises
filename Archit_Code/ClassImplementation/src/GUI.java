@@ -1,7 +1,17 @@
+import java.util.List;
+import java.awt.*;
+import javax.swing.*;
+
 public class GUI {
-    private CurrentRun BaseStation;
-    private list QueueList;
-    public void OpenWindow();
-    public boolean HandleEvent();
-    public boolean UpdateScreen();
+    private BaseStation CurrentRun;
+    private List QueueList;
+    public void OpenWindow(){
+    	
+    }
+    public boolean HandleEvent(){
+    	return true;
+    }
+    public boolean UpdateScreen(){
+    	return true;
+    }
 }

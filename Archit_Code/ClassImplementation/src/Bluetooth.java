@@ -1,11 +1,24 @@
 public class Bluetooth {
     public int Connection;
     public int Ports;
-    public sensorInfo sensors;
+    private UltrasonicSensor UInterface;
+    private LightSensor LInterface;
+    private MicrophoneSensor MInterface;
+    private TouchSensor TInterface;
     
-    public boolean send(String command);
-    public boolean ValidateConnection();
-    public boolean CheckConnection();
-    public boolean UpdateSensors();
-    public boolean CheckPort(int x);
+    public boolean send(String command){
+    	return true;
+    }
+    public boolean ValidateConnection(){
+    	return true;
+    }
+    public boolean CheckConnection(){
+    	return true;
+    }
+    public boolean UpdateSensors(){
+    	return true;
+    }
+    public boolean CheckPort(int x){
+    	return true;
+    }
 }

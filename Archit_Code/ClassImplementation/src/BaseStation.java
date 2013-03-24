@@ -5,9 +5,19 @@ public class BaseStation {
     private MicrophoneSensor MInterface;
     private TouchSensor TInterface;
  
-    public boolean EstablishBluetooth();
-    public boolean MoveForward(float radians);
-    public boolean moveBackward(float radians);
-    public boolean Turn(float radians);
-    public int CheckSensor(int sensor);
+    public boolean EstablishBluetooth(){
+    	return true;
+    }
+    public boolean MoveForward(float radians){
+    	return true;
+    }
+    public boolean moveBackward(float radians){
+    	return true;
+    }
+    public boolean Turn(float radians){
+    	return true;
+    }
+    public int CheckSensor(int sensor){
+    	return 0;
+    }
 }
