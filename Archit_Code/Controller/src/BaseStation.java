@@ -1,10 +1,10 @@
 import java.util.*;
 import javax.swing.*;
 import java.awt.*;
-import lejos.nxt.comm.*;
+import lejos.util.*;
 
 public class BaseStation {
-	public BTConnection connection;
+	//public NXTComm connection;
 	/*static UltrasonicSensor usensor;
 	static LightSensor lsensor;
 	static Microphone msensor;
@@ -14,7 +14,7 @@ public class BaseStation {
 	{
 		//set up connection to robot
 		//need to know bluetooth channel number
-		connection = Bluetooth.waitForConnection();
+		//connection = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 	}
 	
 	public void moveForward()
