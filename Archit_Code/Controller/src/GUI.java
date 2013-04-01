@@ -62,6 +62,7 @@ public class GUI {
 	private JTextField textHeaderNew;
 	private JTextField textConnectionButtonOn;
 	private JTextField textConnectionButtonOff;
+	private static JLabel lblCoin ;
 
 	/**
 	 * Launch the application.
@@ -407,5 +408,10 @@ public class GUI {
 		textConnectionButtonOff.setBounds(388, 292, 86, 20);
 		frame.getContentPane().add(textConnectionButtonOff);
 		textConnectionButtonOff.setColumns(10);
+		lblCoin = new JLabel("Logo");
+		lblCoin.setBounds(0, 0, 400, 50);
+		frame.getContentPane().add(lblCoin);
+		
+		lblCoin.setIcon(new javax.swing.ImageIcon("src/Archit_Logo.png"));
 	}
 }
