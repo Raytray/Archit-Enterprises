@@ -204,13 +204,12 @@ public class GUI {
 		textHeaderMovementControls = new JTextField();
 		textHeaderMovementControls.setBackground(Color.ORANGE);
 		textHeaderMovementControls.setForeground(Color.BLUE);
-		textHeaderMovementControls.setBounds(0, 0, 350, 90);
+		textHeaderMovementControls.setBounds(62, 0, 155, 20);
 		panel.add(textHeaderMovementControls);
 		textHeaderMovementControls.setHorizontalAlignment(SwingConstants.CENTER);
 		textHeaderMovementControls.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		textHeaderMovementControls.setEditable(false);
-		textHeaderMovementControls.setText("Click for WASD");
-		//textHeaderMovementControls.setSize(200, 40);
+		textHeaderMovementControls.setText("Movement Controls");
 		textHeaderMovementControls.setColumns(10);
 		textHeaderMovementControls.addKeyListener(new KeyAdapter() {
 			@Override
