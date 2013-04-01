@@ -1,4 +1,7 @@
+public class LightSensor implements SensorInterface {
+    private int theValue;
 
-public class LightSensor {
-
+    public int getValue() {
+	return theValue;
+    }
 }

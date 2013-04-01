@@ -1,4 +1,7 @@
+public class UltrasonicSensor implements SensorInterface {
+    private int theValue;
 
-public class UltrasonicSensor {
-
+    public int getValue() {
+	return theValue;
+    }
 }

@@ -1,4 +1,7 @@
+public class TouchSensor implements SensorInterface {
+    private int theValue;
 
-public class TouchSensor {
-
+    public int getValue() {
+	return theValue;
+    }
 }
