@@ -56,4 +56,30 @@ public class BaseStation {
 		String command = "ST00000000";
 		//connection.sendPacket(command.getBytes(), 11);
 	}
+    
+    //verify the checksum that is held at the 11th byte.
+    public boolean verifyChecksum(String message) {
+	if(message.length() == 11) {
+            byte[] string = message.getBytes();
+            if(getChecksum(message.substring(0, 10)).equals(message.substring(10))){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Gets the checksum to be sent as the byte.
+    private String getChecksum(String message) {
+	int sum = 0;
+        String ret;
+        byte[] buffer = message.getBytes();
+        for (int i = 0; i < buffer.length; i++) {
+            sum += (int) buffer[i];
+        }
+        sum = sum % 256;
+        byte[] checksum = new byte[1];
+        checksum[0] = (byte) sum;
+        ret = new String(checksum);
+        return ret;
+    }
 }
