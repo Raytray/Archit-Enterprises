@@ -64,7 +64,7 @@ public class GUI
 	private JTextField textHeaderNew;
 	private JTextField textConnectionButtonOn;
 	private JTextField textConnectionButtonOff;
-	private static JLabel lblCoin ;
+	private static JLabel logoLabel ;
 	private JTextField textConnectionOn, textConnectionOff;
 	private JButton btn;
 	private JTextField txtT;
@@ -295,11 +295,11 @@ public class GUI
 		textConnectionButtonOff.setBounds(388, 292, 86, 20);
 		frame.getContentPane().add(textConnectionButtonOff);
 		textConnectionButtonOff.setColumns(10);
-		lblCoin = new JLabel("Logo");
-		lblCoin.setBounds(0, 0, 400, 50);
-		frame.getContentPane().add(lblCoin);
+		logoLabel = new JLabel("Logo");
+		logoLabel .setBounds(0, 0, 400, 50);
+		frame.getContentPane().add(logoLabel);
 		
-		lblCoin.setIcon(new javax.swing.ImageIcon("src/Archit_Logo.png"));
+		 logoLabel.setIcon(new javax.swing.ImageIcon("src/Archit_Logo.png"));
 
 		JButton btnInitiateConnection = new JButton("Initiate Connection");
 		btnInitiateConnection.setBounds(292, 252, 182, 23);
