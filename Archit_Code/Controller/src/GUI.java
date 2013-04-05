@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.imageio.ImageIO;
@@ -21,7 +22,8 @@ import javax.swing.JPanel;
 
 // click W key, robot moves. On release, it stops.
 
-public class GUI {
+public class GUI 
+{
 
 	private JFrame frame;
 	private JTextField txtA;
@@ -45,10 +47,10 @@ public class GUI {
 	private BufferedImage logo;
 	private JLabel lblNewLabel_1;
 	private JTextField textHeaderMovementControls;
-	private JTextField textField_8;
-	private JTextField textField_9;
-	private JTextField txtNo;
-	private JTextField textField_11;
+	private JTextField textFieldMicrophone;
+	private JTextField textFieldLight;
+	private JTextField textFieldTouch;
+	private JTextField textFieldUltrasonic;
 	private JTextField txtUltrasonic_1;
 	private JTextField txtTouch_1;
 	private JTextField txtLight_1;
@@ -63,6 +65,19 @@ public class GUI {
 	private JTextField textConnectionButtonOn;
 	private JTextField textConnectionButtonOff;
 	private static JLabel lblCoin ;
+	private JTextField textConnectionOn, textConnectionOff;
+	private JButton btn;
+	private JTextField txtT;
+	private JTextField inputFieldSpeed;
+	private JTextField txtSpeed;
+	private String temp;
+	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed, 
+	upIsPressed, downIsPressed, stopped, valid;
+	private int speed, previousSpeed;
+	
+	private final int MAX_SPEED = 720;
+	private final int MIN_SPEED = 0;
+	private final int SPEED_CHANGE_INCREMENT = 10;
 
 	/**
 	 * Launch the application.
@@ -90,77 +105,27 @@ public class GUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize()
+	{
+		station = new BaseStation();
+		temp = "";
+		speed = 100;
+		valid = true;
 		frame = new JFrame("Control Station");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setSize(500, 500);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setFocusable(true);
-		frame.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyChar() == 'w')
-				{
-					txtW.setBackground(Color.orange);
-					txtW.setCaretColor(Color.blue);
-					//station.moveForward();
-				}
-				else if(e.getKeyChar() == 'd')
-				{
-					txtD.setBackground(Color.orange);
-					txtD.setCaretColor(Color.blue);
-					//station.turnRight();
-				}
-				else if(e.getKeyChar() == 'a')
-				{
-					txtA.setBackground(Color.orange);
-					txtA.setCaretColor(Color.blue);
-					//station.turnLeft();
-				}
-				else if(e.getKeyChar() == 's')
-				{
-					txtS.setBackground(Color.orange);
-					txtS.setCaretColor(Color.blue);
-					//station.moveBackward();
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.getKeyChar() == 'w')
-				{
-					txtW.setBackground(Color.blue);
-					txtW.setCaretColor(Color.orange);
-					//station.stop();
-				}
-				else if(e.getKeyChar() == 'a')
-				{
-					txtA.setBackground(Color.blue);
-					txtA.setCaretColor(Color.orange);
-					//station.stop();
-				}
-				else if(e.getKeyChar() == 's')
-				{
-					txtS.setBackground(Color.blue);
-					txtS.setCaretColor(Color.orange);
-					//station.stop();
-				}
-				else if(e.getKeyChar() == 'd')
-				{
-					txtD.setBackground(Color.blue);
-					txtD.setCaretColor(Color.orange);
-					//station.stop();
-				}
-			}
-		});
-		
-		
+		makeNewControlListener(frame);
+
 		JPanel panel = new JPanel();
-		panel.setBounds(10, 376, 285, 74);
+		panel.setBounds(10, 376, 464, 74);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-		
-		
+		makeNewControlListener(panel);
+
+
 		txtA = new JTextField();
 		txtA.setForeground(Color.ORANGE);
 		txtA.setBounds(0, 54, 86, 20);
@@ -170,7 +135,7 @@ public class GUI {
 		txtA.setEditable(false);
 		txtA.setText("A");
 		txtA.setColumns(10);
-		
+
 		txtD = new JTextField();
 		txtD.setForeground(Color.ORANGE);
 		txtD.setBackground(Color.BLUE);
@@ -180,7 +145,7 @@ public class GUI {
 		txtD.setEditable(false);
 		txtD.setText("D");
 		txtD.setColumns(10);
-		
+
 		txtS = new JTextField();
 		txtS.setForeground(Color.ORANGE);
 		txtS.setBackground(Color.BLUE);
@@ -190,7 +155,7 @@ public class GUI {
 		txtS.setEditable(false);
 		txtS.setText("S");
 		txtS.setColumns(10);
-		
+
 		txtW = new JTextField();
 		txtW.setForeground(Color.ORANGE);
 		txtW.setBackground(Color.BLUE);
@@ -201,182 +166,104 @@ public class GUI {
 		txtW.setEditable(false);
 		txtW.setText("W");
 		txtW.setColumns(10);
-		
-		textHeaderMovementControls = new JTextField();
-		textHeaderMovementControls.setBackground(Color.ORANGE);
-		textHeaderMovementControls.setForeground(Color.BLUE);
-		textHeaderMovementControls.setBounds(0, 0, 350, 90);
-		panel.add(textHeaderMovementControls);
-		textHeaderMovementControls.setHorizontalAlignment(SwingConstants.CENTER);
-		textHeaderMovementControls.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textHeaderMovementControls.setEditable(false);
-		textHeaderMovementControls.setText("Click for WASD");
-		//textHeaderMovementControls.setSize(200, 40);
-		textHeaderMovementControls.setColumns(10);
-		textHeaderMovementControls.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.getKeyChar() == 'w')
-				{
-					txtW.setBackground(Color.orange);
-					txtW.setCaretColor(Color.blue);
-					//station.moveForward();
-				}
-				else if(e.getKeyChar() == 'd')
-				{
-					txtD.setBackground(Color.orange);
-					txtD.setCaretColor(Color.blue);
-					//station.turnRight();
-				}
-				else if(e.getKeyChar() == 'a')
-				{
-					txtA.setBackground(Color.orange);
-					txtA.setCaretColor(Color.blue);
-					//station.turnLeft();
-				}
-				else if(e.getKeyChar() == 's')
-				{
-					txtS.setBackground(Color.orange);
-					txtS.setCaretColor(Color.blue);
-					//station.moveBackward();
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent e) {
-				if(e.getKeyChar() == 'w')
-				{
-					txtW.setBackground(Color.blue);
-					txtW.setCaretColor(Color.orange);
-					//station.stop();
-				}
-				else if(e.getKeyChar() == 'a')
-				{
-					txtA.setBackground(Color.blue);
-					txtA.setCaretColor(Color.orange);
-					//station.stop();
-				}
-				else if(e.getKeyChar() == 's')
-				{
-					txtS.setBackground(Color.blue);
-					txtS.setCaretColor(Color.orange);
-					//station.stop();
-				}
-				else if(e.getKeyChar() == 'd')
-				{
-					txtD.setBackground(Color.blue);
-					txtD.setCaretColor(Color.orange);
-					//station.stop();
-				}
-			}
-		});
-		
-		
-		
-		textField_8 = new JTextField();
-		textField_8.setText("45");
-		textField_8.setEditable(false);
-		textField_8.setBounds(388, 87, 43, 20);
-		frame.getContentPane().add(textField_8);
-		textField_8.setColumns(10);
-		
-		textField_9 = new JTextField();
-		textField_9.setEditable(false);
-		textField_9.setText("50");
-		textField_9.setBounds(388, 118, 43, 20);
-		frame.getContentPane().add(textField_9);
-		textField_9.setColumns(10);
-		
-		txtNo = new JTextField();
-		txtNo.setText("FALSE");
-		txtNo.setEditable(false);
-		txtNo.setBounds(388, 149, 43, 20);
-		frame.getContentPane().add(txtNo);
-		txtNo.setColumns(10);
-		
-		textField_11 = new JTextField();
-		textField_11.setText("35");
-		textField_11.setEditable(false);
-		textField_11.setBounds(388, 180, 43, 20);
-		frame.getContentPane().add(textField_11);
-		textField_11.setColumns(10);
-		
+
+		txtT = new JTextField();
+		txtT.setText("T");
+		txtT.setHorizontalAlignment(SwingConstants.CENTER);
+		txtT.setForeground(Color.ORANGE);
+		txtT.setEditable(false);
+		txtT.setColumns(10);
+		txtT.setBackground(Color.BLUE);
+		txtT.setBounds(321, 16, 40, 40);
+		panel.add(txtT);
+
+
+
+		textFieldMicrophone = new JTextField();
+		textFieldMicrophone.setText("45");
+		textFieldMicrophone.setEditable(false);
+		textFieldMicrophone.setBounds(408, 87, 43, 20);
+		frame.getContentPane().add(textFieldMicrophone);
+		textFieldMicrophone.setColumns(10);
+
+		textFieldLight = new JTextField();
+		textFieldLight.setEditable(false);
+		textFieldLight.setText("50");
+		textFieldLight.setBounds(408, 118, 43, 20);
+		frame.getContentPane().add(textFieldLight);
+		textFieldLight.setColumns(10);
+
+		textFieldTouch = new JTextField();
+		textFieldTouch.setText("FALSE");
+		textFieldTouch.setEditable(false);
+		textFieldTouch.setBounds(408, 149, 43, 20);
+		frame.getContentPane().add(textFieldTouch);
+		textFieldTouch.setColumns(10);
+
+		textFieldUltrasonic = new JTextField();
+		textFieldUltrasonic.setText("35");
+		textFieldUltrasonic.setEditable(false);
+		textFieldUltrasonic.setBounds(408, 180, 43, 20);
+		frame.getContentPane().add(textFieldUltrasonic);
+		textFieldUltrasonic.setColumns(10);
+
 		txtUltrasonic_1 = new JTextField();
 		txtUltrasonic_1.setForeground(Color.BLUE);
 		txtUltrasonic_1.setBackground(Color.ORANGE);
 		txtUltrasonic_1.setEditable(false);
 		txtUltrasonic_1.setHorizontalAlignment(SwingConstants.CENTER);
 		txtUltrasonic_1.setText("Ultrasonic");
-		txtUltrasonic_1.setBounds(292, 180, 86, 20);
+		txtUltrasonic_1.setBounds(312, 180, 86, 20);
 		frame.getContentPane().add(txtUltrasonic_1);
 		txtUltrasonic_1.setColumns(10);
-		
+
 		txtTouch_1 = new JTextField();
 		txtTouch_1.setForeground(Color.BLUE);
 		txtTouch_1.setBackground(Color.ORANGE);
 		txtTouch_1.setEditable(false);
 		txtTouch_1.setHorizontalAlignment(SwingConstants.CENTER);
 		txtTouch_1.setText("Touch");
-		txtTouch_1.setBounds(292, 149, 86, 20);
+		txtTouch_1.setBounds(312, 149, 86, 20);
 		frame.getContentPane().add(txtTouch_1);
 		txtTouch_1.setColumns(10);
-		
+
 		txtLight_1 = new JTextField();
 		txtLight_1.setForeground(Color.BLUE);
 		txtLight_1.setBackground(Color.ORANGE);
 		txtLight_1.setEditable(false);
 		txtLight_1.setHorizontalAlignment(SwingConstants.CENTER);
 		txtLight_1.setText("Light");
-		txtLight_1.setBounds(292, 118, 86, 20);
+		txtLight_1.setBounds(312, 118, 86, 20);
 		frame.getContentPane().add(txtLight_1);
 		txtLight_1.setColumns(10);
-		
+
 		txtMicrophone_1 = new JTextField();
 		txtMicrophone_1.setForeground(Color.BLUE);
 		txtMicrophone_1.setBackground(Color.ORANGE);
 		txtMicrophone_1.setEditable(false);
 		txtMicrophone_1.setHorizontalAlignment(SwingConstants.CENTER);
 		txtMicrophone_1.setText("Microphone");
-		txtMicrophone_1.setBounds(292, 87, 86, 20);
+		txtMicrophone_1.setBounds(312, 87, 86, 20);
 		frame.getContentPane().add(txtMicrophone_1);
 		txtMicrophone_1.setColumns(10);
-		
-//		textField_12 = new JTextField();
-//		textField_12.setBounds(431, 87, 43, 20);
-//		frame.getContentPane().add(textField_12);
-//		textField_12.setColumns(10);
-//		
-//		textField_13 = new JTextField();
-//		textField_13.setBounds(431, 118, 43, 20);
-//		frame.getContentPane().add(textField_13);
-//		textField_13.setColumns(10);
-//		
-//		textField_14 = new JTextField();
-//		textField_14.setBounds(431, 149, 43, 20);
-//		frame.getContentPane().add(textField_14);
-//		textField_14.setColumns(10);
-//		
-//		textField_15 = new JTextField();
-//		textField_15.setBounds(431, 180, 43, 20);
-//		frame.getContentPane().add(textField_15);
-//		textField_15.setColumns(10);
-		
+
 		textHeaderType = new JTextField();
 		textHeaderType.setHorizontalAlignment(SwingConstants.CENTER);
 		textHeaderType.setForeground(Color.BLUE);
 		textHeaderType.setBackground(Color.ORANGE);
 		textHeaderType.setEditable(false);
 		textHeaderType.setText("Sensor Type");
-		textHeaderType.setBounds(292, 56, 86, 20);
+		textHeaderType.setBounds(312, 56, 86, 20);
 		frame.getContentPane().add(textHeaderType);
 		textHeaderType.setColumns(10);
-		
+
 		textHeaderCurrent = new JTextField();
 		textHeaderCurrent.setForeground(Color.ORANGE);
 		textHeaderCurrent.setBackground(Color.BLUE);
 		textHeaderCurrent.setEditable(false);
 		textHeaderCurrent.setFont(new Font("Tahoma", Font.PLAIN, 10));
 		textHeaderCurrent.setText("Current");
-		textHeaderCurrent.setBounds(388, 56, 43, 20);
+		textHeaderCurrent.setBounds(408, 56, 43, 20);
 		frame.getContentPane().add(textHeaderCurrent);
 		textHeaderCurrent.setColumns(10);
 		
@@ -413,5 +300,252 @@ public class GUI {
 		frame.getContentPane().add(lblCoin);
 		
 		lblCoin.setIcon(new javax.swing.ImageIcon("src/Archit_Logo.png"));
+
+		JButton btnInitiateConnection = new JButton("Initiate Connection");
+		btnInitiateConnection.setBounds(292, 252, 182, 23);
+		btnInitiateConnection.setToolTipText("Click to attempt a connection with the NXT brick.");
+		frame.getContentPane().add(btnInitiateConnection);
+
+		textConnectionOn = new JTextField();
+		textConnectionOn.setEditable(false);
+		textConnectionOn.setHorizontalAlignment(SwingConstants.CENTER);
+		textConnectionOn.setText("On");
+		textConnectionOn.setBounds(292, 292, 86, 20);
+		frame.getContentPane().add(textConnectionOn);
+		textConnectionOn.setColumns(10);
+
+		textConnectionOff = new JTextField();
+		textConnectionOff.setHorizontalAlignment(SwingConstants.CENTER);
+		textConnectionOff.setText("Off");
+		textConnectionOff.setEditable(false);
+		textConnectionOff.setBounds(388, 292, 86, 20);
+		frame.getContentPane().add(textConnectionOff);
+		textConnectionOff.setColumns(10);
+
+		textHeaderMovementControls = new JTextField();
+		textHeaderMovementControls.setBounds(10, 328, 464, 46);
+		frame.getContentPane().add(textHeaderMovementControls);
+		textHeaderMovementControls.setBackground(Color.ORANGE);
+		textHeaderMovementControls.setForeground(Color.BLUE);
+		textHeaderMovementControls.setHorizontalAlignment(SwingConstants.CENTER);
+		textHeaderMovementControls.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		textHeaderMovementControls.setEditable(false);
+		textHeaderMovementControls.setText("Click Here for Keyboard Control");
+		textHeaderMovementControls.setColumns(10);
+		makeNewControlListener(textHeaderMovementControls);
+
+		inputFieldSpeed = new JTextField();
+		inputFieldSpeed.setText("100");
+		inputFieldSpeed.setBounds(216, 180, 86, 20);
+		frame.getContentPane().add(inputFieldSpeed);
+		inputFieldSpeed.setColumns(10);
+
+		txtSpeed = new JTextField();
+		txtSpeed.setHorizontalAlignment(SwingConstants.CENTER);
+		txtSpeed.setText("Speed");
+		txtSpeed.setForeground(Color.BLUE);
+		txtSpeed.setEditable(true);
+		txtSpeed.setColumns(10);
+		txtSpeed.setBackground(Color.ORANGE);
+		txtSpeed.setBounds(120, 180, 86, 20);
+		frame.getContentPane().add(txtSpeed);
+
+
+
 	}
+
+	private void makeNewControlListener(Component c)
+	{
+		c.addKeyListener(new KeyAdapter() 
+		{
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{
+				controlPress(e.getKeyChar());
+			}
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				controlRelease(e.getKeyChar());
+			}
+		});
+	}
+
+	private void controlPress(char key)
+	{
+		//System.out.println("\t" + (int)key);
+		previousSpeed = speed;
+		if(key != ',' && key != '.')
+		{
+			try
+			{
+				speed = Integer.parseInt(inputFieldSpeed.getText());
+				if(speed < MIN_SPEED)
+				{
+					speed = previousSpeed;
+					inputFieldSpeed.setText(String.valueOf(speed));
+					throw new IllegalArgumentException();
+				}
+				if(speed > MAX_SPEED)
+				{
+					speed = MAX_SPEED;
+					inputFieldSpeed.setText(String.valueOf(speed));
+					throw new IllegalArgumentException();
+				}
+				valid = true;
+			}
+			catch(IllegalArgumentException e)
+			{
+				System.err.println("Speed must be between " + MIN_SPEED + " and "
+						+ MAX_SPEED + " inclusive!");
+				valid = false;
+			}
+			catch(Exception e)
+			{
+				System.err.println("Invalid speed!");
+				valid = false;
+			}
+		}
+		if(valid)
+		{
+			station.setSpeed(speed);
+			if(key == ',' && speed > MIN_SPEED)
+			{
+				if(speed >= MIN_SPEED + SPEED_CHANGE_INCREMENT)
+					speed -= SPEED_CHANGE_INCREMENT;
+				else
+					speed = MIN_SPEED;
+			}
+			if(key == '.' && speed < MAX_SPEED)
+			{
+				if(speed <= MAX_SPEED - SPEED_CHANGE_INCREMENT)
+					speed += SPEED_CHANGE_INCREMENT;
+				else
+					speed = MAX_SPEED;
+
+			}
+			if(key == 't' && !tIsPressed)
+			{
+				txtT.setBackground(Color.orange);
+				tIsPressed = true;
+				station.turn180();
+			}
+			if(key == 'w' && !wIsPressed && !sIsPressed)
+			{
+				txtW.setBackground(Color.orange);
+				wIsPressed = true;
+				if(aIsPressed)
+				{
+					station.moveForwardLeft();
+				}
+				else if(dIsPressed)
+				{
+					station.moveForwardRight();
+				}
+				else
+				{
+					station.moveForward();
+				}
+
+			}
+			if(key == 'd' && !dIsPressed && !aIsPressed)
+			{
+				txtD.setBackground(Color.orange);
+				dIsPressed = true;
+				if(wIsPressed)
+				{
+					station.moveForwardRight();
+				}
+				else if(sIsPressed)
+				{
+					station.moveBackwardRight();
+				}
+				else
+				{
+					station.turnRight();
+				}
+			}
+			if(key == 'a' && !aIsPressed && !dIsPressed)
+			{
+				txtA.setBackground(Color.orange);
+				aIsPressed = true;
+				if(wIsPressed)
+				{
+					station.moveForwardLeft();
+				}
+				else if(sIsPressed)
+				{
+					station.moveBackwardLeft();
+				}
+				else
+				{
+					station.turnLeft();
+				}
+			}
+			if(key == 's' && !sIsPressed && !wIsPressed)
+			{
+				txtS.setBackground(Color.orange);
+				sIsPressed = true;
+				if(aIsPressed)
+				{
+					station.moveBackwardLeft();
+				}
+				else if(dIsPressed)
+				{
+					station.moveBackwardRight();
+				}
+				else
+				{
+					station.moveBackward();
+				}
+			}
+			stopped = !(wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed);
+			inputFieldSpeed.setText(String.valueOf(speed));
+		}
+	}
+
+
+	private void controlRelease(char key)
+	{
+		if(valid)
+		{
+			if(key == 't')
+			{
+				txtT.setBackground(Color.blue);
+				tIsPressed = false;
+			}
+			else if(key == 'w')
+			{
+				txtW.setBackground(Color.blue);
+				wIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			else if(key == 'a')
+			{
+				txtA.setBackground(Color.blue);
+				aIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			else if(key == 's')
+			{
+				txtS.setBackground(Color.blue);
+				sIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			else if(key == 'd')
+			{
+				txtD.setBackground(Color.blue);
+				dIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			stopped = wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed;
+			//		System.out.println(temp);
+		}
+	}
+
+
 }
