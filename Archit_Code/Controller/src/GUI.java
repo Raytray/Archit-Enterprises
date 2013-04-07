@@ -214,6 +214,7 @@ public class GUI {
 			    } catch (IOException e1) {
 				e1.printStackTrace();
 			    }
+			}
 		    }
 		    isSent = true;
 		}
