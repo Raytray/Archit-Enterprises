@@ -33,6 +33,7 @@ public class GUI {
     private JTextField txtD;
     private JTextField txtS;
     private JTextField txtW;
+    private JTextField txtG;
     private BaseStation station;
     private JTextField txtMovementControls;
     private JTextField textField;
@@ -154,6 +155,17 @@ public class GUI {
 	txtW.setEditable(false);
 	txtW.setText("W");
 	txtW.setColumns(10);
+	
+	txtG = new JTextField();
+	txtG.setForeground(Color.ORANGE);
+	txtG.setBackground(Color.BLUE);
+	txtG.setBounds(199, 23, 86, 20);
+	panel.add(txtG);
+
+	txtG.setHorizontalAlignment(SwingConstants.CENTER);
+	txtG.setEditable(false);
+	txtG.setText("G");
+	txtG.setColumns(10);
 
 	textHeaderMovementControls = new JTextField();
 	textHeaderMovementControls.setBackground(Color.ORANGE);
@@ -171,6 +183,12 @@ public class GUI {
 		boolean isSent = false;
 
 		public void keyTyped(KeyEvent e) {
+			boolean valueHolder = station.getTouchValue();
+			if(valueHolder == true){
+				txtNo.setText("true");
+			}else{
+				txtNo.setText("false");
+			}
 		    if (!isSent) {
 			if (e.getKeyChar() == 'w') {
 			    txtW.setBackground(Color.orange);
@@ -197,7 +215,7 @@ public class GUI {
 				station.turnLeft(0);
 			    } catch (IOException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				e1.printStackTrace(); 
 			    }
 			} else if (e.getKeyChar() == 's') {
 			    txtS.setBackground(Color.orange);
@@ -209,7 +227,9 @@ public class GUI {
 				e1.printStackTrace();
 			    }
 			} else if (e.getKeyChar() == 'g') {
-			    try {
+			    txtG.setBackground(Color.orange);
+			    txtG.setCaretColor(Color.blue);
+				try {
 				station.getTouchSensor();
 			    } catch (IOException e1) {
 				e1.printStackTrace();
@@ -221,7 +241,13 @@ public class GUI {
 
 		@Override
 		public void keyReleased(KeyEvent e) {
-		    isSent = false;
+			boolean valueHolder = station.getTouchValue();
+			if(valueHolder == true){
+				txtNo.setText("true");
+			}else{
+				txtNo.setText("false");
+			}
+			isSent = false;
 		    if (!isSent) {
 			if (e.getKeyChar() == 'w') {
 			    txtW.setBackground(Color.blue);
@@ -260,6 +286,7 @@ public class GUI {
 				e1.printStackTrace();
 			    }
 			}
+			
 		    }
 		}
 	    });

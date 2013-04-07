@@ -19,6 +19,7 @@ public class BaseStation {
     public DataOutputStream oHandle;
     public DataInputStream iHandle;
     public String command; 
+    private int touchValue = 0; 
 	
     public BaseStation() throws NXTCommException, IOException
     {
@@ -45,6 +46,9 @@ public class BaseStation {
 				String ret = (new String(buffer)).trim();
 				if(verifyChecksum(ret)){
 				    System.out.printf("NXJ: %s [%dms]\n", ret);
+				    if(ret.substring(0, 3).equals("SDT")){
+				    	touchValue = Integer.parseInt(ret.substring(9,10));
+				    }
 				}
 			    }
 			    Thread.sleep(10);
@@ -136,6 +140,14 @@ public class BaseStation {
 	command ="RST0000000";
 	command = command + getChecksum(command);
 	sendMessage(command);
+    }
+    
+    public boolean getTouchValue(){
+    	if(touchValue == 1){
+    		return true;
+    	}else{
+    		return false;
+    	}
     }
     
     //verify the checksum that is held at the 11th byte.
