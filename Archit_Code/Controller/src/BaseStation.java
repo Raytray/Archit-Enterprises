@@ -134,7 +134,7 @@ public class BaseStation {
     public void getTouchSensor() throws IOException
     {
 	command ="RST0000000";
-	command = command + getCheckSum(command);
+	command = command + getChecksum(command);
 	sendMessage(command);
     }
     
