@@ -33,7 +33,6 @@ public class GUI {
     private JTextField txtD;
     private JTextField txtS;
     private JTextField txtW;
-    private JTextField txtG;
     private BaseStation station;
     private JTextField txtMovementControls;
     private JTextField textField;
@@ -51,10 +50,10 @@ public class GUI {
     private BufferedImage logo;
     private JLabel lblNewLabel_1;
     private JTextField textHeaderMovementControls;
-    private JTextField textField_8;
-    private JTextField textField_9;
-    private JTextField txtNo;
-    private JTextField textField_11;
+    public JTextField textField_8;
+    public JTextField textField_9;
+    public JTextField txtNo;
+    public JTextField textField_11;
     private JTextField txtUltrasonic_1;
     private JTextField txtTouch_1;
     private JTextField txtLight_1;
@@ -63,11 +62,9 @@ public class GUI {
     private JTextField textField_13;
     private JTextField textField_14;
     private JTextField textField_15;
-    private JTextField textHeaderType;
-    private JTextField textHeaderCurrent;
-    private JTextField textHeaderNew;
     private JTextField textConnectionButtonOn;
     private JTextField textConnectionButtonOff;
+    private static GUI window;
 
     /**
      * Launch the application.
@@ -76,7 +73,7 @@ public class GUI {
 	EventQueue.invokeLater(new Runnable() {
 		public void run() {
 		    try {
-			GUI window = new GUI();
+			window = new GUI();
 			window.frame.setVisible(true);
 		    } catch (Exception e) {
 			e.printStackTrace();
@@ -102,7 +99,7 @@ public class GUI {
      * @throws IOException
      */
     private void initialize() throws NXTCommException, IOException {
-	station = new BaseStation();
+	station = new BaseStation(window);
 	frame = new JFrame("Control Station");
 	frame.setBounds(100, 100, 450, 300);
 	frame.setSize(500, 500);
@@ -155,17 +152,6 @@ public class GUI {
 	txtW.setEditable(false);
 	txtW.setText("W");
 	txtW.setColumns(10);
-	
-	txtG = new JTextField();
-	txtG.setForeground(Color.ORANGE);
-	txtG.setBackground(Color.BLUE);
-	txtG.setBounds(199, 23, 86, 20);
-	panel.add(txtG);
-
-	txtG.setHorizontalAlignment(SwingConstants.CENTER);
-	txtG.setEditable(false);
-	txtG.setText("G");
-	txtG.setColumns(10);
 
 	textHeaderMovementControls = new JTextField();
 	textHeaderMovementControls.setBackground(Color.ORANGE);
@@ -224,14 +210,6 @@ public class GUI {
 				station.moveBackward();
 			    } catch (IOException e1) {
 				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			    }
-			} else if (e.getKeyChar() == 'g') {
-			    txtG.setBackground(Color.orange);
-			    txtG.setCaretColor(Color.blue);
-				try {
-				station.getTouchSensor();
-			    } catch (IOException e1) {
 				e1.printStackTrace();
 			    }
 			}
@@ -294,28 +272,28 @@ public class GUI {
 	textField_8 = new JTextField();
 	textField_8.setText("45");
 	textField_8.setEditable(false);
-	textField_8.setBounds(388, 87, 43, 20);
+	textField_8.setBounds(357, 87, 43, 20);
 	frame.getContentPane().add(textField_8);
 	textField_8.setColumns(10);
 
 	textField_9 = new JTextField();
 	textField_9.setEditable(false);
 	textField_9.setText("50");
-	textField_9.setBounds(388, 118, 43, 20);
+	textField_9.setBounds(357, 118, 43, 20);
 	frame.getContentPane().add(textField_9);
 	textField_9.setColumns(10);
 
 	txtNo = new JTextField();
 	txtNo.setText("FALSE");
 	txtNo.setEditable(false);
-	txtNo.setBounds(388, 149, 43, 20);
+	txtNo.setBounds(357, 149, 43, 20);
 	frame.getContentPane().add(txtNo);
 	txtNo.setColumns(10);
 
 	textField_11 = new JTextField();
 	textField_11.setText("35");
 	textField_11.setEditable(false);
-	textField_11.setBounds(388, 180, 43, 20);
+	textField_11.setBounds(357, 180, 43, 20);
 	frame.getContentPane().add(textField_11);
 	textField_11.setColumns(10);
 
@@ -325,7 +303,7 @@ public class GUI {
 	txtUltrasonic_1.setEditable(false);
 	txtUltrasonic_1.setHorizontalAlignment(SwingConstants.CENTER);
 	txtUltrasonic_1.setText("Ultrasonic");
-	txtUltrasonic_1.setBounds(292, 180, 86, 20);
+	txtUltrasonic_1.setBounds(261, 180, 86, 20);
 	frame.getContentPane().add(txtUltrasonic_1);
 	txtUltrasonic_1.setColumns(10);
 
@@ -335,7 +313,7 @@ public class GUI {
 	txtTouch_1.setEditable(false);
 	txtTouch_1.setHorizontalAlignment(SwingConstants.CENTER);
 	txtTouch_1.setText("Touch");
-	txtTouch_1.setBounds(292, 149, 86, 20);
+	txtTouch_1.setBounds(261, 149, 86, 20);
 	frame.getContentPane().add(txtTouch_1);
 	txtTouch_1.setColumns(10);
 
@@ -345,7 +323,7 @@ public class GUI {
 	txtLight_1.setEditable(false);
 	txtLight_1.setHorizontalAlignment(SwingConstants.CENTER);
 	txtLight_1.setText("Light");
-	txtLight_1.setBounds(292, 118, 86, 20);
+	txtLight_1.setBounds(261, 118, 86, 20);
 	frame.getContentPane().add(txtLight_1);
 	txtLight_1.setColumns(10);
 
@@ -355,38 +333,9 @@ public class GUI {
 	txtMicrophone_1.setEditable(false);
 	txtMicrophone_1.setHorizontalAlignment(SwingConstants.CENTER);
 	txtMicrophone_1.setText("Microphone");
-	txtMicrophone_1.setBounds(292, 87, 86, 20);
+	txtMicrophone_1.setBounds(261, 87, 86, 20);
 	frame.getContentPane().add(txtMicrophone_1);
 	txtMicrophone_1.setColumns(10);
-
-	textHeaderType = new JTextField();
-	textHeaderType.setHorizontalAlignment(SwingConstants.CENTER);
-	textHeaderType.setForeground(Color.BLUE);
-	textHeaderType.setBackground(Color.ORANGE);
-	textHeaderType.setEditable(false);
-	textHeaderType.setText("Sensor Type");
-	textHeaderType.setBounds(292, 56, 86, 20);
-	frame.getContentPane().add(textHeaderType);
-	textHeaderType.setColumns(10);
-
-	textHeaderCurrent = new JTextField();
-	textHeaderCurrent.setForeground(Color.ORANGE);
-	textHeaderCurrent.setBackground(Color.BLUE);
-	textHeaderCurrent.setEditable(false);
-	textHeaderCurrent.setFont(new Font("Tahoma", Font.PLAIN, 10));
-	textHeaderCurrent.setText("Current");
-	textHeaderCurrent.setBounds(388, 56, 43, 20);
-	frame.getContentPane().add(textHeaderCurrent);
-	textHeaderCurrent.setColumns(10);
-
-	textHeaderNew = new JTextField();
-	textHeaderNew.setBackground(Color.BLUE);
-	textHeaderNew.setForeground(Color.ORANGE);
-	textHeaderNew.setEditable(false);
-	textHeaderNew.setText("New");
-	textHeaderNew.setBounds(431, 56, 43, 20);
-	frame.getContentPane().add(textHeaderNew);
-	textHeaderNew.setColumns(10);
 
 	JButton btnNewButton = new JButton("Initiate Connection");
 	btnNewButton.addActionListener(new ActionListener() {
@@ -401,14 +350,14 @@ public class GUI {
 		    }
 		}
 	    });
-	btnNewButton.setBounds(292, 252, 182, 23);
+	btnNewButton.setBounds(274, 258, 182, 23);
 	frame.getContentPane().add(btnNewButton);
 
 	textConnectionButtonOn = new JTextField();
 	textConnectionButtonOn.setEditable(false);
 	textConnectionButtonOn.setHorizontalAlignment(SwingConstants.CENTER);
 	textConnectionButtonOn.setText("On");
-	textConnectionButtonOn.setBounds(292, 292, 86, 20);
+	textConnectionButtonOn.setBounds(274, 292, 86, 20);
 	frame.getContentPane().add(textConnectionButtonOn);
 	textConnectionButtonOn.setColumns(10);
 
@@ -416,9 +365,70 @@ public class GUI {
 	textConnectionButtonOff.setHorizontalAlignment(SwingConstants.CENTER);
 	textConnectionButtonOff.setText("Off");
 	textConnectionButtonOff.setEditable(false);
-	textConnectionButtonOff.setBounds(388, 292, 86, 20);
+	textConnectionButtonOff.setBounds(370, 292, 86, 20);
 	frame.getContentPane().add(textConnectionButtonOff);
 	textConnectionButtonOff.setColumns(10);
 	textConnectionButtonOff.setBackground(Color.red);
+	
+	JButton btnNewButton_1 = new JButton("Refresh");
+	btnNewButton_1.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent arg0) {
+			try {
+				station.getMicrophoneSensor();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	});
+	btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 9));
+	btnNewButton_1.setBounds(405, 86, 69, 23);
+	frame.getContentPane().add(btnNewButton_1);
+	
+	JButton button = new JButton("Refresh");
+	button.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				station.getLightSensor();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	});
+	button.setFont(new Font("Tahoma", Font.PLAIN, 9));
+	button.setBounds(405, 117, 69, 23);
+	frame.getContentPane().add(button);
+	
+	JButton button_1 = new JButton("Refresh");
+	button_1.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				station.getTouchSensor();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	});
+	button_1.setFont(new Font("Tahoma", Font.PLAIN, 9));
+	button_1.setBounds(405, 148, 69, 23);
+	frame.getContentPane().add(button_1);
+	
+	JButton button_2 = new JButton("Refresh");
+	button_2.addActionListener(new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+			try {
+				station.getUltraSensor();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	});
+	button_2.setFont(new Font("Tahoma", Font.PLAIN, 9));
+	button_2.setBounds(405, 179, 69, 23);
+	frame.getContentPane().add(button_2);
     }
 }

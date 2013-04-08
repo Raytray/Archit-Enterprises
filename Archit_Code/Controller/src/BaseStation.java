@@ -20,9 +20,11 @@ public class BaseStation {
     public DataInputStream iHandle;
     public String command; 
     private int touchValue = 0; 
+    private GUI theGUI;
 	
-    public BaseStation() throws NXTCommException, IOException
+    public BaseStation(GUI g) throws NXTCommException, IOException
     {
+    	theGUI = g;
     }
 	
     public void establishConnection() throws NXTCommException, IOException {
@@ -48,8 +50,27 @@ public class BaseStation {
 				    System.out.printf("NXJ: %s [%dms]\n", ret);
 				    if(ret.substring(0, 3).equals("SDT")){
 				    	touchValue = Integer.parseInt(ret.substring(9,10));
+				    	if(getTouchValue())
+				    		theGUI.txtNo.setText("TRUE");
+				    	else
+				    		theGUI.txtNo.setText("FALSE");
 				    }
-				}
+				    else if(ret.substring(0,3).equals("SDU"))
+				    {
+				    	int uValue = Integer.parseInt(ret.substring(3,10));
+				    	theGUI.textField_11.setText(Integer.toString(uValue));
+				    }
+				    else if(ret.substring(0,3).equals("SDM"))
+				    {
+				    	int mValue = Integer.parseInt(ret.substring(3,10));
+				    	theGUI.textField_8.setText(Integer.toString(mValue));
+				    }
+				    else if(ret.substring(0,3).equals("SDL"))
+				    {
+				    	int lValue = Integer.parseInt(ret.substring(3,10));
+				    	theGUI.textField_9.setText(Integer.toString(lValue));
+				    }
+				   }
 			    }
 			    Thread.sleep(10);
 			} catch (IOException e) {
@@ -174,4 +195,22 @@ public class BaseStation {
         ret = new String(checksum);
         return ret;
     }
+
+	public void getMicrophoneSensor() throws IOException {
+		command ="RSM0000000";
+		command = command + getChecksum(command);
+		sendMessage(command);		
+	}
+
+	public void getLightSensor() throws IOException {
+		command ="RSL0000000";
+		command = command + getChecksum(command);
+		sendMessage(command);
+	}
+
+	public void getUltraSensor() throws IOException {
+		command ="RSU0000000";
+		command = command + getChecksum(command);
+		sendMessage(command);
+	}
 }
