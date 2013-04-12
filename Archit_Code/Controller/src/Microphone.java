@@ -1,4 +1,7 @@
+public class Microphone implements SensorInterface {
+    private int theValue;
 
-public class Microphone {
-
+    public int getValue() {
+	return theValue;
+    }
 }
