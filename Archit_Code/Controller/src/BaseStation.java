@@ -232,20 +232,32 @@ public class BaseStation
 	}
 
 	public void getMicrophoneSensor() throws IOException {
-		command ="RSM0000000";
+		command = "RSM0000000";
 		command = command + getChecksum(command);
-		sendMessage(command);		
+		sendMessage(command);
 	}
 
 	public void getLightSensor() throws IOException {
-		command ="RSL0000000";
+		command = "RSL0000000";
 		command = command + getChecksum(command);
 		sendMessage(command);
 	}
 
 	public void getUltraSensor() throws IOException {
-		command ="RSU0000000";
+		command = "RSU0000000";
 		command = command + getChecksum(command);
 		sendMessage(command);
+	}
+
+	public int getMicrophoneValue() {
+		return microphoneValue;
+	}
+
+	public int getLightValue() {
+		return lightValue;
+	}
+
+	public int getUltrasonicValue() {
+		return ultraValue;
 	}
 }

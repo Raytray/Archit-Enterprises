@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.KeyAdapter;
@@ -11,14 +10,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+
 import java.awt.Font;
 import java.io.IOException;
-import java.util.*;
+
 import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.JPanel;
 
 import lejos.pc.comm.NXTCommException;
@@ -359,6 +355,340 @@ public class GUI
 				try {
 					station.getUltraSensor();
 				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		button_2.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		button_2.setBounds(405, 179, 69, 23);
+		frame.getContentPane().add(button_2);
+	}
+
+	private void makeNewControlListener(Component c)
+	{
+		c.addKeyListener(new KeyAdapter() 
+		{
+			@Override
+			public void keyPressed(KeyEvent e) 
+			{
+				try {
+					controlPress(e.getKeyChar());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				try {
+					controlRelease(e.getKeyChar());
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private void controlPress(char key) throws IOException
+	{
+		//System.out.println("\t" + (int)key);
+		previousSpeed = speed;
+		if(key != ',' && key != '.')
+		{
+			try
+			{
+				speed = Integer.parseInt(inputFieldSpeed.getText());
+				if(speed < MIN_SPEED)
+				{
+					speed = previousSpeed;
+					inputFieldSpeed.setText(String.valueOf(speed));
+					throw new IllegalArgumentException();
+				}
+				if(speed > MAX_SPEED)
+				{
+					speed = MAX_SPEED;
+					inputFieldSpeed.setText(String.valueOf(speed));
+					throw new IllegalArgumentException();
+				}
+				valid = true;
+			}
+			catch(IllegalArgumentException e)
+			{
+				System.err.println("Speed must be between " + MIN_SPEED + " and "
+						+ MAX_SPEED + " inclusive!");
+				valid = false;
+			}
+			catch(Exception e)
+			{
+				System.err.println("Invalid speed!");
+				valid = false;
+			}
+		}
+		if(valid)
+		{
+			//station.setSpeed(speed);
+			if(key == ',' && speed > MIN_SPEED)
+			{
+				if(speed >= MIN_SPEED + SPEED_CHANGE_INCREMENT)
+					speed -= SPEED_CHANGE_INCREMENT;
+				else
+					speed = MIN_SPEED;
+			}
+			if(key == '.' && speed < MAX_SPEED)
+			{
+				if(speed <= MAX_SPEED - SPEED_CHANGE_INCREMENT)
+					speed += SPEED_CHANGE_INCREMENT;
+				else
+					speed = MAX_SPEED;
+
+			}
+			if(key == 't' && !tIsPressed)
+			{
+				txtT.setBackground(Color.orange);
+				tIsPressed = true;
+				station.turnRight(180);
+			}
+			if(key == 'w' && !wIsPressed && !sIsPressed)
+			{
+				txtW.setBackground(Color.orange);
+				wIsPressed = true;
+				if(aIsPressed)
+				{
+					station.moveForwardLeft();
+				}
+				else if(dIsPressed)
+				{
+					station.moveForwardRight();
+				}
+				else
+				{
+					station.moveForward();
+				}
+
+			}
+			if(key == 'd' && !dIsPressed && !aIsPressed)
+			{
+				txtD.setBackground(Color.orange);
+				dIsPressed = true;
+				if(wIsPressed)
+				{
+					station.moveForwardRight();
+				}
+				else if(sIsPressed)
+				{
+					station.moveBackwardRight();
+				}
+				else
+				{
+					station.turnRight(0);
+				}
+			}
+			if(key == 'a' && !aIsPressed && !dIsPressed)
+			{
+				txtA.setBackground(Color.orange);
+				aIsPressed = true;
+				if(wIsPressed)
+				{
+					station.moveForwardLeft();
+				}
+				else if(sIsPressed)
+				{
+					station.moveBackwardLeft();
+				}
+				else
+				{
+					station.turnLeft(0);
+				}
+			}
+			if(key == 's' && !sIsPressed && !wIsPressed)
+			{
+				txtS.setBackground(Color.orange);
+				sIsPressed = true;
+				if(aIsPressed)
+				{
+					station.moveBackwardLeft();
+				}
+				else if(dIsPressed)
+				{
+					station.moveBackwardRight();
+				}
+				else
+				{
+					station.moveBackward();
+				}
+			}
+			stopped = !(wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed);
+			inputFieldSpeed.setText(String.valueOf(speed));
+		}
+	}
+
+
+	private void controlRelease(char key) throws IOException
+	{
+		if(valid)
+		{
+			valueHolder = station.getTouchValue();
+			if(valueHolder)
+			{
+				txtNo.setText("true");
+			}
+			else
+			{
+				txtNo.setText("false");
+			}
+			//			isSent = false;
+
+			if(key == 't')
+			{
+				txtT.setBackground(Color.blue);
+				tIsPressed = false;
+			}
+			else if(key == 'w')
+			{
+				txtW.setBackground(Color.blue);
+				wIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			else if(key == 'a')
+			{
+				txtA.setBackground(Color.blue);
+				aIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			else if(key == 's')
+			{
+				txtS.setBackground(Color.blue);
+				sIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			else if(key == 'd')
+			{
+				txtD.setBackground(Color.blue);
+				dIsPressed = false;
+				if(!stopped)
+					station.stop();
+			}
+			stopped = wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed;
+			//		System.out.println(temp);
+		}
+	}
+
+
+	//=======
+
+	public void keyReleased(KeyEvent e)
+	{
+		boolean valueHolder = station.getTouchValue();
+		if(valueHolder)
+		{
+			txtNo.setText("true");
+		}
+		else
+		{
+			txtNo.setText("false");
+		}
+		//		isSent = false;
+		if (isSent) 
+		{
+			if (e.getKeyChar() == 'w') 
+			{
+				txtW.setBackground(Color.blue);
+				txtW.setCaretColor(Color.orange);
+				try 
+				{
+					station.stop();
+				} catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} 
+			else if (e.getKeyChar() == 'a') 
+			{
+				txtA.setBackground(Color.blue);
+				txtA.setCaretColor(Color.orange);
+				try 
+				{
+					station.stop();
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} 
+			else if (e.getKeyChar() == 's') 
+			{
+				txtS.setBackground(Color.blue);
+				txtS.setCaretColor(Color.orange);
+				try 
+				{
+					station.stop();
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} 
+			else if (e.getKeyChar() == 'd') 
+			{
+				txtD.setBackground(Color.blue);
+				txtD.setCaretColor(Color.orange);
+				try 
+				{
+					station.stop();
+				} 
+				catch (IOException e1) 
+				{
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+		});
+		button.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		button.setBounds(405, 117, 69, 23);
+		frame.getContentPane().add(button);
+
+		JButton button_1 = new JButton("Refresh");
+		button_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					station.getTouchSensor();
+					boolean touch = station.getTouchValue();
+					if (touch)
+						txtNo.setText("TRUE");
+					else
+						txtNo.setText("FALSE");
+					Thread.sleep(10);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (InterruptedException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+			}
+		});
+		button_1.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		button_1.setBounds(405, 148, 69, 23);
+		frame.getContentPane().add(button_1);
+
+		JButton button_2 = new JButton("Refresh");
+		button_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					station.getUltraSensor();
+					int uVal = station.getUltrasonicValue();
+					textField_11.setText(Integer.toString(uVal));
+				} catch (IOException e1) {
+>>>>>>> master
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
