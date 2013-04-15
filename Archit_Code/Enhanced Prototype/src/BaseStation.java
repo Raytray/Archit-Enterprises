@@ -10,20 +10,20 @@ import lejos.pc.comm.NXTCommFactory;
 import lejos.pc.comm.NXTInfo;
 
 
-public class BaseStation 
+public class BaseStation
 {
 	public NXTComm connection;
 	public NXTInfo info;
-	public OutputStream os; 
+	public OutputStream os;
 	public boolean readFlag = true;
-	public InputStream is; 
+	public InputStream is;
 	public DataOutputStream oHandle;
 	public DataInputStream iHandle;
-	public String command; 
-	private int tValue = 0;
-	private int uValue = 0; 
-	private int lValue = 0; 
-	private int mValue = 0;
+	public String command;
+	private int touchValue = 0;
+	private int ultraSonicValue = 0;
+	private int lightValue = 0;
+	private int micValue = 0;
 
 	public BaseStation() throws NXTCommException, IOException
 	{
@@ -33,7 +33,7 @@ public class BaseStation
 		connection = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 		info = new NXTInfo(NXTCommFactory.BLUETOOTH, "TROGDOR", "00:16:53:13:E6:74"); // your robot's name must be NXT and the code is 123
 		//info = new NXTInfo(NXTCommFactory.BLUETOOTH, "NXT", "00:16:53:13:D3:FC");
-		
+
 		// open connections and data streams
 		connection.open(info);
 		os = connection.getOutputStream();
@@ -41,38 +41,38 @@ public class BaseStation
 		iHandle = new DataInputStream(is);
 		oHandle = new DataOutputStream(os);
 
-		Thread PCreceiver = new Thread() 
-		{ 
-			public void run() 
+		Thread PCreceiver = new Thread()
+		{
+			public void run()
 			{
-				while (readFlag) 
+				while (readFlag)
 				{
-					try 
+					try
 					{
 						byte[] buffer = new byte[256];
 						int count = iHandle.read(buffer); // might want to check ack later
-						if (count > 0) 
+						if (count > 0)
 						{
 							String ret = (new String(buffer)).trim();
 							if(verifyChecksum(ret)){
 								if(ret.substring(0, 3).equals("SDT")){
-									tValue = Integer.parseInt(ret.substring(9,10));
+									touchValue = Integer.parseInt(ret.substring(9,10));
 								}
 								else if(ret.substring(0,3).equals("SDU"))
 								{
-									uValue = Integer.parseInt(ret.substring(3,10));
+									ultraSonicValue = Integer.parseInt(ret.substring(3,10));
 								}
 								else if(ret.substring(0,3).equals("SDM"))
 								{
-									mValue = Integer.parseInt(ret.substring(3,10));
+									micValue = Integer.parseInt(ret.substring(3,10));
 								}
 								else if(ret.substring(0,3).equals("SDL"))
 								{
-									lValue = Integer.parseInt(ret.substring(3,10));
+									lightValue = Integer.parseInt(ret.substring(3,10));
 								}
 								else if(ret.substring(0,2).equals("RA"))
 								{
-									
+
 								}
 							}
 						}
@@ -96,8 +96,8 @@ public class BaseStation
 	  iHandle.close();
 	  os.close();
 	  is.close();
-	  connection.close(); 
-	  readFlag = false;*/ 
+	  connection.close();
+	  readFlag = false;*/
 	}
 
 	public void sendMessage(String message) throws IOException
@@ -111,7 +111,7 @@ public class BaseStation
 		//Encrypt a move forward command and send using bluetooth
 		command = "MSF0000000";
 		command = command + getChecksum(command);
-		sendMessage(command); 
+		sendMessage(command);
 	}
 
 	public void moveBackward() throws IOException
@@ -134,7 +134,7 @@ public class BaseStation
 			command = "TNL0000090";
 		}
 		command = command + getChecksum(command);
-		sendMessage(command); 
+		sendMessage(command);
 	}
 
 	public void turnRight(int degrees) throws IOException
@@ -144,12 +144,12 @@ public class BaseStation
 		{
 			command = "TNR0000000";
 		}
-		else 
+		else
 		{
 			command = "TNR0000090";
 		}
 		command = command + getChecksum(command);
-		sendMessage(command); 
+		sendMessage(command);
 	}
 
 	public void turn180() throws IOException
@@ -157,7 +157,7 @@ public class BaseStation
 		//encrypt a turn 180 command and send using bluetooth
 			command = "TNR0000180";
 		command = command + getChecksum(command);
-		sendMessage(command); 
+		sendMessage(command);
 	}
 
 	public void moveForwardLeft()
@@ -185,7 +185,7 @@ public class BaseStation
 		//encrypt a stop command and send using bluetooth
 		command = "ST00000000";
 		command = command + getChecksum(command);
-		sendMessage(command); 
+		sendMessage(command);
 	}
 
 	public void getTouchSensor() throws IOException
@@ -196,7 +196,7 @@ public class BaseStation
 	}
 
 	public boolean getTouchValue(){
-		if(tValue == 1){
+		if(touchValue == 1){
 			return true;
 		}else{
 			return false;
@@ -231,7 +231,7 @@ public class BaseStation
 	public void getMicrophoneSensor() throws IOException {
 		command ="RSM0000000";
 		command = command + getChecksum(command);
-		sendMessage(command);		
+		sendMessage(command);
 	}
 
 	public void getLightSensor() throws IOException {
@@ -245,22 +245,22 @@ public class BaseStation
 		command = command + getChecksum(command);
 		sendMessage(command);
 	}
-	public void readSensors() throws IOException { 
+	public void readSensors() throws IOException {
 		command = "RA00000000";
 		command = command + getChecksum(command);
 		sendMessage(command);
 	}
 	public int getMicroValue()
 	{
-		return mValue;
+		return micValue;
 	}
 	public int getLightValue()
 	{
-		return lValue;
+		return lightValue;
 	}
 	public int getUltraValue()
 	{
-		return uValue;
+		return ultraSonicValue;
 	}
 	public void exitRobot() throws IOException
 	{
@@ -269,7 +269,7 @@ public class BaseStation
 		sendMessage(command);
 	}
 	public void setSpeed(int s) throws IOException
-	{ 
+	{
 		if(s < 10)
 		{
 			command = "SSDT00000" + Integer.toString(s);

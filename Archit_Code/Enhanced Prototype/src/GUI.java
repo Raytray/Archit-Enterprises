@@ -19,7 +19,7 @@ import java.awt.event.ActionEvent;
 
 // click W key, robot moves. On release, it stops.
 
-public class GUI 
+public class GUI
 {
 
 	//<<<<<<< HEAD
@@ -29,7 +29,7 @@ public class GUI
 	private JTextField txtD;
 	private JTextField txtS;
 	private JTextField txtW;
-	private BaseStation station; 
+	private BaseStation station;
 	private JTextField textHeaderMovementControls;
 	private JTextField txtUltrasonic;
 	private JTextField txtTouch;
@@ -38,7 +38,7 @@ public class GUI
 	private JTextField txtT;
 	private JTextField inputFieldSpeed;
 	private JTextField txtSpeed;
-	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed, 
+	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed,
 	stopped, valid, valueHolder, isSent;
 	private int speed, previousSpeed;
 	private final int MAX_SPEED = 720;
@@ -78,7 +78,7 @@ public class GUI
 
 	/**
 	 * Create the application.
-	 * 
+	 *
 	 * @throws NXTCommException
 	 * @throws IOException
 	 */
@@ -89,11 +89,11 @@ public class GUI
 
 	/**
 	 * Initialize the contents of the frame.
-	 * 
+	 *
 	 * @throws NXTCommException
 	 * @throws IOException
 	 */
-	private void initialize() throws NXTCommException, IOException 
+	private void initialize() throws NXTCommException, IOException
 	{
 		station = new BaseStation();
 		frame = new JFrame("Control Station");
@@ -163,7 +163,7 @@ public class GUI
 		// textHeaderMovementControls.setSize(200, 40);
 		textHeaderMovementControls.setColumns(10);
 		makeNewControlListener(textHeaderMovementControls);
-		
+
 		txtT = new JTextField();
 		txtT.setBounds(328, 41, 40, 40);
 		panel.add(txtT);
@@ -245,7 +245,7 @@ public class GUI
 		txtMicrophone.setBounds(261, 87, 86, 20);
 		frame.getContentPane().add(txtMicrophone);
 		txtMicrophone.setColumns(10);
-		
+
 		inputFieldSpeed = new JTextField();
 		inputFieldSpeed.setText("100");
 		inputFieldSpeed.setBounds(357, 209, 43, 20);
@@ -318,7 +318,7 @@ public class GUI
 			public void actionPerformed(ActionEvent e) {
 				try {
 					station.getLightSensor();
-					textField_light.setText(Integer.toString(station.getLightValue()));					
+					textField_light.setText(Integer.toString(station.getLightValue()));
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -379,7 +379,7 @@ public class GUI
 		button_2.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		button_2.setBounds(405, 179, 69, 23);
 		frame.getContentPane().add(button_2);
-		
+
 		JButton refreshAll = new JButton("Refresh All Sensors");
 		refreshAll.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -393,7 +393,7 @@ public class GUI
 		});
 		refreshAll.setBounds(287, 62, 172, 23);
 		frame.getContentPane().add(refreshAll);
-		
+
 		btnExit = new JButton("Terminate Connection");
 		btnExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -408,7 +408,7 @@ public class GUI
 		});
 		btnExit.setBounds(274, 323, 182, 23);
 		frame.getContentPane().add(btnExit);
-		
+
 		btnSpeed = new JButton("Refresh");
 		btnSpeed.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -430,10 +430,10 @@ public class GUI
 
 	private void makeNewControlListener(Component c)
 	{
-		c.addKeyListener(new KeyAdapter() 
+		c.addKeyListener(new KeyAdapter()
 		{
 			@Override
-			public void keyPressed(KeyEvent e) 
+			public void keyPressed(KeyEvent e)
 			{
 				try {
 					controlPress(e.getKeyChar());
@@ -648,58 +648,58 @@ public class GUI
 			textField_touch.setText("false");
 		}
 		//		isSent = false;
-		if (isSent) 
+		if (isSent)
 		{
-			if (e.getKeyChar() == 'w') 
+			if (e.getKeyChar() == 'w')
 			{
 				txtW.setBackground(Color.blue);
 				txtW.setCaretColor(Color.orange);
-				try 
+				try
 				{
 					station.stop();
-				} catch (IOException e1) 
+				} catch (IOException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} 
-			else if (e.getKeyChar() == 'a') 
+			}
+			else if (e.getKeyChar() == 'a')
 			{
 				txtA.setBackground(Color.blue);
 				txtA.setCaretColor(Color.orange);
-				try 
+				try
 				{
 					station.stop();
-				} 
-				catch (IOException e1) 
+				}
+				catch (IOException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} 
-			else if (e.getKeyChar() == 's') 
+			}
+			else if (e.getKeyChar() == 's')
 			{
 				txtS.setBackground(Color.blue);
 				txtS.setCaretColor(Color.orange);
-				try 
+				try
 				{
 					station.stop();
-				} 
-				catch (IOException e1) 
+				}
+				catch (IOException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			} 
-			else if (e.getKeyChar() == 'd') 
+			}
+			else if (e.getKeyChar() == 'd')
 			{
 				txtD.setBackground(Color.blue);
 				txtD.setCaretColor(Color.orange);
-				try 
+				try
 				{
 					station.stop();
-				} 
-				catch (IOException e1) 
+				}
+				catch (IOException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
