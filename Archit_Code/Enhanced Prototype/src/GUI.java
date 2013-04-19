@@ -1,58 +1,35 @@
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.io.IOException;
 import javax.swing.JPanel;
-
 import lejos.pc.comm.NXTCommException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-// click W key, robot moves. On release, it stops.
-
 public class GUI
 {
-
-	//<<<<<<< HEAD
-
-	private JFrame frame;
-	private JTextField txtA;
-	private JTextField txtD;
-	private JTextField txtS;
-	private JTextField txtW;
 	private BaseStation station;
-	private JTextField textHeaderMovementControls;
-	private JTextField txtUltrasonic;
-	private JTextField txtTouch;
-	private JTextField txtLight;
-	private JTextField txtMicrophone;
-	private JTextField txtT;
-	private JTextField inputFieldSpeed;
-	private JTextField txtSpeed;
+	private JFrame frame;
+	private JTextField txtA, txtD, txtS, txtW, txtT, txtHeaderMovementControls,
+	txtUltrasonic, txtTouch, txtLight, txtMicrophone, inputFieldSpeed, txtSpeed,
+	txtConnectionButtonOn, txtConnectionButtonOff;
+	private JButton buttonnExit, buttonnSpeed;
 	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed,
 	stopped, valid, valueHolder, isSent;
 	private int speed, previousSpeed;
+	private static GUI window;
 	private final int MAX_SPEED = 720;
 	private final int MIN_SPEED = 0;
 	private final int SPEED_CHANGE_INCREMENT = 10;
-	public JTextField textField_micro;
-	public JTextField textField_light;
-	public JTextField textField_touch;
-	public JTextField textField_ultra;
-	private JTextField textConnectionButtonOn;
-	private JTextField textConnectionButtonOff;
-	private static GUI window;
-	private JButton btnExit;
-	private JButton btnSpeed;
+	public JTextField txtFieldMicrophone, txtFieldLight, txtFieldTouch, txtFieldUltrasonic;
 
 	/**
 	 * Launch the application.
@@ -150,19 +127,18 @@ public class GUI
 		txtW.setColumns(10);
 
 
-		textHeaderMovementControls = new JTextField();
-		textHeaderMovementControls.setBackground(Color.ORANGE);
-		textHeaderMovementControls.setForeground(Color.BLUE);
-		textHeaderMovementControls.setBounds(0, 0, 464, 30);
-		panel.add(textHeaderMovementControls);
-		textHeaderMovementControls
+		txtHeaderMovementControls = new JTextField();
+		txtHeaderMovementControls.setBackground(Color.ORANGE);
+		txtHeaderMovementControls.setForeground(Color.BLUE);
+		txtHeaderMovementControls.setBounds(0, 0, 464, 30);
+		panel.add(txtHeaderMovementControls);
+		txtHeaderMovementControls
 		.setHorizontalAlignment(SwingConstants.CENTER);
-		textHeaderMovementControls.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		textHeaderMovementControls.setEditable(false);
-		textHeaderMovementControls.setText("Click for Movement Controls");
-		// textHeaderMovementControls.setSize(200, 40);
-		textHeaderMovementControls.setColumns(10);
-		makeNewControlListener(textHeaderMovementControls);
+		txtHeaderMovementControls.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		txtHeaderMovementControls.setEditable(false);
+		txtHeaderMovementControls.setText("Click for Movement Controls");
+		txtHeaderMovementControls.setColumns(10);
+		makeNewControlListener(txtHeaderMovementControls);
 
 		txtT = new JTextField();
 		txtT.setBounds(328, 41, 40, 40);
@@ -174,37 +150,37 @@ public class GUI
 		txtT.setText("T");
 		txtT.setColumns(10);
 
-		textField_micro = new JTextField();
-		textField_micro.setText("45");
-		textField_micro.setEditable(false);
-		textField_micro.setBackground(Color.green);
-		textField_micro.setBounds(357, 87, 43, 20);
-		frame.getContentPane().add(textField_micro);
-		textField_micro.setColumns(10);
+		txtFieldMicrophone = new JTextField();
+		txtFieldMicrophone.setText("45");
+		txtFieldMicrophone.setEditable(false);
+		txtFieldMicrophone.setBackground(Color.green);
+		txtFieldMicrophone.setBounds(357, 87, 43, 20);
+		frame.getContentPane().add(txtFieldMicrophone);
+		txtFieldMicrophone.setColumns(10);
 
-		textField_light = new JTextField();
-		textField_light.setEditable(false);
-		textField_light.setText("50");
-		textField_light.setBackground(Color.green);
-		textField_light.setBounds(357, 118, 43, 20);
-		frame.getContentPane().add(textField_light);
-		textField_light.setColumns(10);
+		txtFieldLight = new JTextField();
+		txtFieldLight.setEditable(false);
+		txtFieldLight.setText("50");
+		txtFieldLight.setBackground(Color.green);
+		txtFieldLight.setBounds(357, 118, 43, 20);
+		frame.getContentPane().add(txtFieldLight);
+		txtFieldLight.setColumns(10);
 
-		textField_touch = new JTextField();
-		textField_touch.setText("FALSE");
-		textField_touch.setEditable(false);
-		textField_touch.setBackground(Color.green);
-		textField_touch.setBounds(357, 149, 43, 20);
-		frame.getContentPane().add(textField_touch);
-		textField_touch.setColumns(10);
+		txtFieldTouch = new JTextField();
+		txtFieldTouch.setText("FALSE");
+		txtFieldTouch.setEditable(false);
+		txtFieldTouch.setBackground(Color.green);
+		txtFieldTouch.setBounds(357, 149, 43, 20);
+		frame.getContentPane().add(txtFieldTouch);
+		txtFieldTouch.setColumns(10);
 
-		textField_ultra = new JTextField();
-		textField_ultra.setText("35");
-		textField_ultra.setEditable(false);
-		textField_ultra.setBackground(Color.green);
-		textField_ultra.setBounds(357, 180, 43, 20);
-		frame.getContentPane().add(textField_ultra);
-		textField_ultra.setColumns(10);
+		txtFieldUltrasonic = new JTextField();
+		txtFieldUltrasonic.setText("35");
+		txtFieldUltrasonic.setEditable(false);
+		txtFieldUltrasonic.setBackground(Color.green);
+		txtFieldUltrasonic.setBounds(357, 180, 43, 20);
+		frame.getContentPane().add(txtFieldUltrasonic);
+		txtFieldUltrasonic.setColumns(10);
 
 		txtUltrasonic = new JTextField();
 		txtUltrasonic.setForeground(Color.BLUE);
@@ -262,14 +238,13 @@ public class GUI
 		txtSpeed.setBounds(261, 209, 86, 20);
 		frame.getContentPane().add(txtSpeed);
 
-
 		JButton btnConnection = new JButton("Initiate Connection");
 		btnConnection.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					station.establishConnection();
-					textConnectionButtonOn.setBackground(Color.green);
-					textConnectionButtonOff.setBackground(Color.lightGray);
+					txtConnectionButtonOn.setBackground(Color.green);
+					txtConnectionButtonOff.setBackground(Color.lightGray);
 				} catch (NXTCommException | IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -279,30 +254,35 @@ public class GUI
 		btnConnection.setBounds(274, 258, 182, 23);
 		frame.getContentPane().add(btnConnection);
 
-		textConnectionButtonOn = new JTextField();
-		textConnectionButtonOn.setEditable(false);
-		textConnectionButtonOn.setHorizontalAlignment(SwingConstants.CENTER);
-		textConnectionButtonOn.setText("On");
-		textConnectionButtonOn.setBounds(274, 292, 86, 20);
-		frame.getContentPane().add(textConnectionButtonOn);
-		textConnectionButtonOn.setColumns(10);
+		txtConnectionButtonOn = new JTextField();
+		txtConnectionButtonOn.setEditable(false);
+		txtConnectionButtonOn.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConnectionButtonOn.setText("On");
+		txtConnectionButtonOn.setBounds(274, 292, 86, 20);
+		frame.getContentPane().add(txtConnectionButtonOn);
+		txtConnectionButtonOn.setColumns(10);
 
-		textConnectionButtonOff = new JTextField();
-		textConnectionButtonOff.setHorizontalAlignment(SwingConstants.CENTER);
-		textConnectionButtonOff.setText("Off");
-		textConnectionButtonOff.setEditable(false);
-		textConnectionButtonOff.setBounds(370, 292, 86, 20);
-		frame.getContentPane().add(textConnectionButtonOff);
-		textConnectionButtonOff.setColumns(10);
-		textConnectionButtonOff.setBackground(Color.red);
+		txtConnectionButtonOff = new JTextField();
+		txtConnectionButtonOff.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConnectionButtonOff.setText("Off");
+		txtConnectionButtonOff.setEditable(false);
+		txtConnectionButtonOff.setBounds(370, 292, 86, 20);
+		frame.getContentPane().add(txtConnectionButtonOff);
+		txtConnectionButtonOff.setColumns(10);
+		txtConnectionButtonOff.setBackground(Color.red);
 
 		JButton btnNewButton_1 = new JButton("Refresh");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
+		btnNewButton_1.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
 					station.getMicrophoneSensor();
-					textField_micro.setText(Integer.toString(station.getMicroValue()));
-				} catch (IOException e) {
+					txtFieldMicrophone.setText(Integer.toString(station.getMicrophoneValue()));
+				} 
+				catch (IOException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -314,12 +294,16 @@ public class GUI
 		frame.getContentPane().add(btnNewButton_1);
 
 		JButton button = new JButton("Refresh");
-		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		button.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.getLightSensor();
-					textField_light.setText(Integer.toString(station.getLightValue()));
-				} catch (IOException e1) {
+					txtFieldLight.setText(Integer.toString(station.getLightValue()));
+				} catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -330,20 +314,23 @@ public class GUI
 		frame.getContentPane().add(button);
 
 		JButton button_1 = new JButton("Refresh");
-		button_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		button_1.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.getTouchSensor();
 					valueHolder = station.getTouchValue();
 					if(valueHolder)
 					{
-						textField_touch.setText("TRUE");
-						textField_touch.setBackground(Color.red);
+						txtFieldTouch.setText("TRUE");
+						txtFieldTouch.setBackground(Color.red);
 					}
 					else
 					{
-						textField_touch.setText("FALSE");
-						textField_touch.setBackground(Color.green);
+						txtFieldTouch.setText("FALSE");
+						txtFieldTouch.setBackground(Color.green);
 					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -356,21 +343,25 @@ public class GUI
 		frame.getContentPane().add(button_1);
 
 		JButton button_2 = new JButton("Refresh");
-		button_2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
-					//50 won't move it
+		button_2.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.getUltraSensor();
-					textField_ultra.setText(Integer.toString(station.getUltraValue()));
-					if(station.getUltraValue() > 50)
+					txtFieldUltrasonic.setText(Integer.toString(station.getUltrasonicValue()));
+					if(station.getUltrasonicValue() > 50)
 					{
-						textField_ultra.setBackground(Color.green);
+						txtFieldUltrasonic.setBackground(Color.green);
 					}
 					else
 					{
-						textField_ultra.setBackground(Color.red);
+						txtFieldUltrasonic.setBackground(Color.red);
 					}
-				} catch (IOException e1) {
+				} 
+				catch (IOException e1)
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -381,11 +372,16 @@ public class GUI
 		frame.getContentPane().add(button_2);
 
 		JButton refreshAll = new JButton("Refresh All Sensors");
-		refreshAll.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
+		refreshAll.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
 					station.readSensors();
-				} catch (IOException e) {
+				} 
+				catch (IOException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -394,38 +390,48 @@ public class GUI
 		refreshAll.setBounds(287, 62, 172, 23);
 		frame.getContentPane().add(refreshAll);
 
-		btnExit = new JButton("Terminate Connection");
-		btnExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
+		buttonnExit = new JButton("Terminate Connection");
+		buttonnExit.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
 					station.exitRobot();
 					System.exit(0);
-				} catch (IOException e) {
+				} 
+				catch (IOException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		btnExit.setBounds(274, 323, 182, 23);
-		frame.getContentPane().add(btnExit);
+		buttonnExit.setBounds(274, 323, 182, 23);
+		frame.getContentPane().add(buttonnExit);
 
-		btnSpeed = new JButton("Refresh");
-		btnSpeed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		buttonnSpeed = new JButton("Refresh");
+		buttonnSpeed.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.setSpeed(Integer.parseInt(inputFieldSpeed.getText()));
-				} catch (NumberFormatException e1) {
+				} catch (NumberFormatException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (IOException e1) {
+				} catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
-		btnSpeed.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnSpeed.setBounds(405, 208, 69, 23);
-		frame.getContentPane().add(btnSpeed);
+		buttonnSpeed.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		buttonnSpeed.setBounds(405, 208, 69, 23);
+		frame.getContentPane().add(buttonnSpeed);
 	}
 
 	private void makeNewControlListener(Component c)
@@ -435,9 +441,11 @@ public class GUI
 			@Override
 			public void keyPressed(KeyEvent e)
 			{
-				try {
+				try 
+				{
 					controlPress(e.getKeyChar());
-				} catch (IOException e1) {
+				} catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -445,9 +453,11 @@ public class GUI
 			@Override
 			public void keyReleased(KeyEvent e)
 			{
-				try {
+				try 
+				{
 					controlRelease(e.getKeyChar());
-				} catch (IOException e1) {
+				} catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -457,7 +467,6 @@ public class GUI
 
 	private void controlPress(char key) throws IOException
 	{
-		//System.out.println("\t" + (int)key);
 		previousSpeed = speed;
 		if(key != ',' && key != '.')
 		{
@@ -492,7 +501,6 @@ public class GUI
 		}
 		if(valid)
 		{
-			//station.setSpeed(speed);
 			if(key == ',' && speed > MIN_SPEED)
 			{
 				if(speed >= MIN_SPEED + SPEED_CHANGE_INCREMENT)
@@ -593,8 +601,6 @@ public class GUI
 	{
 		if(valid)
 		{
-			//			isSent = false;
-
 			if(key == 't')
 			{
 				txtT.setBackground(Color.blue);
@@ -629,31 +635,25 @@ public class GUI
 					station.stop();
 			}
 			stopped = wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed;
-			//		System.out.println(temp);
 		}
 	}
-
-
-	//=======
 
 	public void keyReleased(KeyEvent e)
 	{
 		boolean valueHolder = station.getTouchValue();
 		if(valueHolder)
 		{
-			textField_touch.setText("true");
+			txtFieldTouch.setText("true");
 		}
 		else
 		{
-			textField_touch.setText("false");
+			txtFieldTouch.setText("false");
 		}
-		//		isSent = false;
 		if (isSent)
 		{
 			if (e.getKeyChar() == 'w')
 			{
 				txtW.setBackground(Color.blue);
-				txtW.setCaretColor(Color.orange);
 				try
 				{
 					station.stop();
@@ -666,7 +666,6 @@ public class GUI
 			else if (e.getKeyChar() == 'a')
 			{
 				txtA.setBackground(Color.blue);
-				txtA.setCaretColor(Color.orange);
 				try
 				{
 					station.stop();
@@ -680,7 +679,6 @@ public class GUI
 			else if (e.getKeyChar() == 's')
 			{
 				txtS.setBackground(Color.blue);
-				txtS.setCaretColor(Color.orange);
 				try
 				{
 					station.stop();
@@ -694,7 +692,6 @@ public class GUI
 			else if (e.getKeyChar() == 'd')
 			{
 				txtD.setBackground(Color.blue);
-				txtD.setCaretColor(Color.orange);
 				try
 				{
 					station.stop();
