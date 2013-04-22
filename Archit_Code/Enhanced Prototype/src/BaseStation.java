@@ -9,7 +9,7 @@ inspection notes:
 suggested we remove stop() as well. Maybe I'm not familiar with the design specs well
 enough, but I don't see how we could get by without it (unless the robot does movements in ~10ms
 increments, so stopping the robot would simply involve stopping any movement commands)
-*/
+ */
 
 
 import java.io.DataInputStream;
@@ -27,7 +27,7 @@ public class BaseStation
 	public NXTComm connection;
 	public NXTInfo info;
 	public OutputStream os;
-	public boolean readFlag = true;
+	public boolean readFlag;
 	public InputStream is;
 	public DataOutputStream oHandle;
 	public DataInputStream iHandle;
@@ -60,35 +60,35 @@ public class BaseStation
 		{
 			public void run()
 			{
+				byte[] buffer;
+				String message;
+				int count;
+				readFlag = true;
 				while (readFlag)
 				{
 					try
 					{
-						byte[] buffer = new byte[BYTE_SIZE];
-						int count = iHandle.read(buffer); // TODO check ack later
+						buffer = new byte[BYTE_SIZE];
+						count = iHandle.read(buffer); // TODO check ack later
 						if (count > 0)
 						{
-							String message = (new String(buffer)).trim();
+							message = (new String(buffer)).trim();
 							if(verifyChecksum(message))
 							{
-								if(message.substring(0,3).equals("SDT"))
+								switch(message.substring(0,3))
 								{
+								case "SDT":
 									touchValue = Integer.parseInt(message.substring(9,MESSAGE_LENGTH));
-								}
-								else if(message.substring(0,3).equals("SDU"))
-								{
+									break;
+								case "SDU":
 									ultraSonicValue = Integer.parseInt(message.substring(3,MESSAGE_LENGTH));
-								}
-								else if(message.substring(0,3).equals("SDM"))
-								{
+									break;
+								case "SDM":
 									micValue = Integer.parseInt(message.substring(3,MESSAGE_LENGTH));
-								}
-								else if(message.substring(0,3).equals("SDL"))
-								{
+									break;
+								case "SDL":
 									lightValue = Integer.parseInt(message.substring(3,MESSAGE_LENGTH));
-								}
-								else if(message.substring(0,2).equals("RA"))
-								{
+									break;
 								}
 							}
 						}
@@ -206,6 +206,7 @@ public class BaseStation
 	private String getChecksum(String message) 
 	{
 		int sum = 0;
+		byte[] checksum = new byte[1];
 		String checksumString;
 		byte[] buffer = message.getBytes();
 		for (int i = 0; i < buffer.length; i++) 
@@ -213,12 +214,11 @@ public class BaseStation
 			sum += (int) buffer[i];
 		}
 		sum = sum % BYTE_SIZE;
-		byte[] checksum = new byte[1];
 		checksum[0] = (byte) sum;
 		checksumString = new String(checksum);
 		return checksumString;
 	}
-	
+
 	public boolean verifyChecksum(String message) 
 	{
 		if(message.length() == 11) 
@@ -305,7 +305,7 @@ public class BaseStation
 		command = command + getChecksum(command);
 		sendMessage(command);
 	}
-	
+
 	private void buildCommand()
 	{
 		buildCommand(0);

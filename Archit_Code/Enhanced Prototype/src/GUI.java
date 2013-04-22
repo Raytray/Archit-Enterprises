@@ -21,9 +21,9 @@ public class GUI
 	private JTextField txtA, txtD, txtS, txtW, txtT, txtHeaderMovementControls,
 	txtUltrasonic, txtTouch, txtLight, txtMicrophone, inputFieldSpeed, txtSpeed,
 	txtConnectionButtonOn, txtConnectionButtonOff;
-	private JButton buttonnExit, buttonnSpeed;
+	private JButton buttonExit, buttonSpeed;
 	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed,
-	stopped, valid, valueHolder, isSent;
+	stopped, valid, valueHolder;
 	private int speed, previousSpeed;
 	private static GUI window;
 	private final int MAX_SPEED = 720;
@@ -72,6 +72,12 @@ public class GUI
 	 */
 	private void initialize() throws NXTCommException, IOException
 	{
+		wIsPressed = false;
+		dIsPressed = false;
+		sIsPressed = false;
+		aIsPressed = false;
+		tIsPressed = false;
+		speed = 100;
 		station = new BaseStation();
 		frame = new JFrame("Control Station");
 		frame.setBounds(100, 100, 450, 300);
@@ -238,22 +244,6 @@ public class GUI
 		txtSpeed.setBounds(261, 209, 86, 20);
 		frame.getContentPane().add(txtSpeed);
 
-		JButton btnConnection = new JButton("Initiate Connection");
-		btnConnection.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
-					station.establishConnection();
-					txtConnectionButtonOn.setBackground(Color.green);
-					txtConnectionButtonOff.setBackground(Color.lightGray);
-				} catch (NXTCommException | IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		});
-		btnConnection.setBounds(274, 258, 182, 23);
-		frame.getContentPane().add(btnConnection);
-
 		txtConnectionButtonOn = new JTextField();
 		txtConnectionButtonOn.setEditable(false);
 		txtConnectionButtonOn.setHorizontalAlignment(SwingConstants.CENTER);
@@ -270,6 +260,27 @@ public class GUI
 		frame.getContentPane().add(txtConnectionButtonOff);
 		txtConnectionButtonOff.setColumns(10);
 		txtConnectionButtonOff.setBackground(Color.red);
+		
+		JButton btnConnection = new JButton("Initiate Connection");
+		btnConnection.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
+					station.establishConnection();
+					txtConnectionButtonOn.setBackground(Color.green);
+					txtConnectionButtonOff.setBackground(Color.lightGray);
+				} 
+				catch (NXTCommException | IOException e) 
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		btnConnection.setBounds(274, 258, 182, 23);
+		frame.getContentPane().add(btnConnection);
 
 		JButton btnNewButton_1 = new JButton("Refresh");
 		btnNewButton_1.addActionListener(new ActionListener() 
@@ -302,7 +313,8 @@ public class GUI
 				{
 					station.getLightSensor();
 					txtFieldLight.setText(Integer.toString(station.getLightValue()));
-				} catch (IOException e1) 
+				} 
+				catch (IOException e1) 
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -332,7 +344,9 @@ public class GUI
 						txtFieldTouch.setText("FALSE");
 						txtFieldTouch.setBackground(Color.green);
 					}
-				} catch (IOException e1) {
+				} 
+				catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -390,8 +404,8 @@ public class GUI
 		refreshAll.setBounds(287, 62, 172, 23);
 		frame.getContentPane().add(refreshAll);
 
-		buttonnExit = new JButton("Terminate Connection");
-		buttonnExit.addActionListener(new ActionListener() 
+		buttonExit = new JButton("Terminate Connection");
+		buttonExit.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
@@ -407,11 +421,11 @@ public class GUI
 				}
 			}
 		});
-		buttonnExit.setBounds(274, 323, 182, 23);
-		frame.getContentPane().add(buttonnExit);
+		buttonExit.setBounds(274, 323, 182, 23);
+		frame.getContentPane().add(buttonExit);
 
-		buttonnSpeed = new JButton("Refresh");
-		buttonnSpeed.addActionListener(new ActionListener() 
+		buttonSpeed = new JButton("Refresh");
+		buttonSpeed.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -429,9 +443,9 @@ public class GUI
 				}
 			}
 		});
-		buttonnSpeed.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		buttonnSpeed.setBounds(405, 208, 69, 23);
-		frame.getContentPane().add(buttonnSpeed);
+		buttonSpeed.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		buttonSpeed.setBounds(405, 208, 69, 23);
+		frame.getContentPane().add(buttonSpeed);
 	}
 
 	private void makeNewControlListener(Component c)
@@ -450,7 +464,6 @@ public class GUI
 					e1.printStackTrace();
 				}
 			}
-			@Override
 			public void keyReleased(KeyEvent e)
 			{
 				try 
@@ -599,48 +612,7 @@ public class GUI
 
 	private void controlRelease(char key) throws IOException
 	{
-		if(valid)
-		{
-			if(key == 't')
-			{
-				txtT.setBackground(Color.blue);
-				tIsPressed = false;
-			}
-			else if(key == 'w')
-			{
-				txtW.setBackground(Color.blue);
-				wIsPressed = false;
-				if(!stopped)
-					station.stop();
-			}
-			else if(key == 'a')
-			{
-				txtA.setBackground(Color.blue);
-				aIsPressed = false;
-				if(!stopped)
-					station.stop();
-			}
-			else if(key == 's')
-			{
-				txtS.setBackground(Color.blue);
-				sIsPressed = false;
-				if(!stopped)
-					station.stop();
-			}
-			else if(key == 'd')
-			{
-				txtD.setBackground(Color.blue);
-				dIsPressed = false;
-				if(!stopped)
-					station.stop();
-			}
-			stopped = wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed;
-		}
-	}
-
-	public void keyReleased(KeyEvent e)
-	{
-		boolean valueHolder = station.getTouchValue();
+		valueHolder = station.getTouchValue();
 		if(valueHolder)
 		{
 			txtFieldTouch.setText("true");
@@ -649,59 +621,42 @@ public class GUI
 		{
 			txtFieldTouch.setText("false");
 		}
-		if (isSent)
+		if(valid)
 		{
-			if (e.getKeyChar() == 'w')
+			switch(key)
 			{
+			case 't':
+				txtT.setBackground(Color.blue);
+				tIsPressed = false;
+				break;
+			case 'w':
 				txtW.setBackground(Color.blue);
-				try
-				{
-					station.stop();
-				} catch (IOException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			else if (e.getKeyChar() == 'a')
-			{
+				wIsPressed = false;
+				if(!stopped)
+				break;
+			case 'a':
 				txtA.setBackground(Color.blue);
-				try
-				{
-					station.stop();
-				}
-				catch (IOException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			else if (e.getKeyChar() == 's')
-			{
+				aIsPressed = false;
+			case 's':
 				txtS.setBackground(Color.blue);
-				try
-				{
-					station.stop();
-				}
-				catch (IOException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			else if (e.getKeyChar() == 'd')
-			{
+				sIsPressed = false;
+				break;
+			case 'd':
 				txtD.setBackground(Color.blue);
+				dIsPressed = false;
+			}
+			if(!stopped && key != 't')
+			{
 				try
 				{
-					station.stop();
+				station.stop();
 				}
-				catch (IOException e1)
+				catch(Exception e)
 				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					e.printStackTrace();
 				}
 			}
+			stopped = wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed;
 		}
 	}
 }
