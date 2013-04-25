@@ -3,6 +3,8 @@ import java.awt.Component;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
+import javax.swing.JLabel;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import javax.swing.JTextField;
@@ -30,6 +32,7 @@ public class GUI
 	private final int MIN_SPEED = 0;
 	private final int SPEED_CHANGE_INCREMENT = 10;
 	public JTextField txtFieldMicrophone, txtFieldLight, txtFieldTouch, txtFieldUltrasonic;
+	private static JLabel architEnterprisesLogo;
 
 	/**
 	 * Launch the application.
@@ -91,7 +94,11 @@ public class GUI
 		panel.setBounds(10, 358, 464, 92);
 		frame.getContentPane().add(panel);
 		panel.setLayout(null);
-
+		
+		architEnterprisesLogo = new JLabel();
+		architEnterprisesLogo.setBounds(35, 0, 400, 50);
+		frame.getContentPane().add(architEnterprisesLogo);
+		architEnterprisesLogo.setIcon(new javax.swing.ImageIcon("src/Archit_Logo.png"));
 		txtA = new JTextField();
 		txtA.setForeground(Color.ORANGE);
 		txtA.setBounds(0, 67, 86, 20);
