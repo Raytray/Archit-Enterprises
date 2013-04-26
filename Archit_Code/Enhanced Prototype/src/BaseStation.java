@@ -1,17 +1,3 @@
-/*
- * Remaining phase 1 inspections:
-1. in setSpeed() what are numbers 10 and 100? 
-	(I know they're checks for how many digits are in the numbers, but what
-	would you guys suggest as a name for a symbolic constant?)
-
-inspection notes:
-1. turn180 was removed since it was just a 180-degree turn-right, but the other team
-suggested we remove stop() as well. Maybe I'm not familiar with the design specs well
-enough, but I don't see how we could get by without it (unless the robot does movements in ~10ms
-increments, so stopping the robot would simply involve stopping any movement commands)
- */
-
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -36,6 +22,9 @@ public class BaseStation
 	private final int UPDATE_TIME = 10;
 	private final int BYTE_SIZE = 256;
 	private final int MESSAGE_LENGTH = 10;
+	private final int TENS = 10; 
+	private final int HUNDREDS = 100;
+	private final int THOUSANDS = 1000;
 
 	public BaseStation() throws NXTCommException, IOException
 	{
@@ -49,7 +38,7 @@ public class BaseStation
 		connection = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 		info = new NXTInfo(NXTCommFactory.BLUETOOTH, "TROGDOR", "00:16:53:13:E6:74"); 
 		//info = new NXTInfo(NXTCommFactory.BLUETOOTH, "NXT", "00:16:53:13:D3:FC");
-
+		
 		connection.open(info);
 		os = connection.getOutputStream();
 		is = connection.getInputStream();
@@ -101,7 +90,8 @@ public class BaseStation
 					} 
 					catch (InterruptedException e) 
 					{
-						// TODO empty catch block
+						System.out.println("Failed to connect");
+						return;
 					}
 				}
 			}
@@ -130,7 +120,7 @@ public class BaseStation
 	}
 
 	public void turnLeft(int degrees) throws IOException
-	{ // TODO implement variability
+	{ 
 		if(degrees < 0)
 		{
 			turnRight(degrees*(-1));
@@ -144,7 +134,7 @@ public class BaseStation
 	}
 
 	public void turnRight(int degrees) throws IOException
-	{ // TODO implement variability
+	{ 
 		if(degrees < 0)
 		{
 			turnLeft(degrees*(-1));
@@ -157,24 +147,32 @@ public class BaseStation
 		}
 	}
 
-	public void moveForwardLeft()
+	public void moveForwardLeft() throws IOException
 	{
-		// TODO implement
+		command = "MAFL000000";
+		buildCommand();
+		sendMessage(command);
 	}
 
-	public void moveForwardRight()
+	public void moveForwardRight() throws IOException
 	{
-		// TODO implement
+		command = "MAFR000000";
+		buildCommand();
+		sendMessage(command);
 	}
 
-	public void moveBackwardLeft()
+	public void moveBackwardLeft() throws IOException
 	{
-		// TODO implement
+		command = "MABL000000";
+		buildCommand();
+		sendMessage(command);
 	}
 
-	public void moveBackwardRight()
+	public void moveBackwardRight() throws IOException
 	{
-		// TODO implement
+		command = "MABR000000";
+		buildCommand();
+		sendMessage(command);
 	}
 
 	public void stop() throws IOException
@@ -279,22 +277,16 @@ public class BaseStation
 	{
 		command = "ECE0000000";
 		buildCommand();
-		oHandle.close();
-		iHandle.close();
-		os.close();
-		is.close();
-		connection.close();
-		readFlag = false;
 		sendMessage(command);
 	}
 
 	public void setSpeed(int newSpeed) throws IOException
 	{
-		if(newSpeed < 10)
+		if(newSpeed < TENS)
 		{
 			command = "SSDT00000" + Integer.toString(newSpeed);
 		}
-		else if(newSpeed < 100)
+		else if(newSpeed < HUNDREDS)
 		{
 			command = "SSDT0000" + Integer.toString(newSpeed);
 		}
@@ -313,15 +305,15 @@ public class BaseStation
 
 	private void buildCommand(int value)
 	{ // TODO check for proper function
-		if(value < 10)
+		if(value < TENS)
 		{
 			command = command.substring(0,MESSAGE_LENGTH-1);
 		}
-		else if(value < 100)
+		else if(value < HUNDREDS)
 		{
 			command = command.substring(0,MESSAGE_LENGTH-2);
 		}
-		else if(value < 1000)
+		else if(value < THOUSANDS)
 		{
 			command = command.substring(0,MESSAGE_LENGTH-3);
 		}
