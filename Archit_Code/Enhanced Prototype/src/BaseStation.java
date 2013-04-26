@@ -3,12 +3,6 @@
 1. in setSpeed() what are numbers 10 and 100? 
 	(I know they're checks for how many digits are in the numbers, but what
 	would you guys suggest as a name for a symbolic constant?)
-
-inspection notes:
-1. turn180 was removed since it was just a 180-degree turn-right, but the other team
-suggested we remove stop() as well. Maybe I'm not familiar with the design specs well
-enough, but I don't see how we could get by without it (unless the robot does movements in ~10ms
-increments, so stopping the robot would simply involve stopping any movement commands)
  */
 
 
@@ -33,6 +27,16 @@ public class BaseStation
 	public DataInputStream iHandle;
 	public String command;
 	private int touchValue, ultraSonicValue, lightValue, micValue;
+	private StringBuffer currentError;
+	private final String[] errorMessages = {
+			"Error with sensor in port 1.",
+			"Error with sensor in port 2.",
+			"Error with sensor in port 3.",
+			"Error with sensor in port 4.",
+			"Error with motor in port A.",
+			"Error with motor in port B.",
+			"Error with motor in port C.",
+	};
 	private final int UPDATE_TIME = 10;
 	private final int BYTE_SIZE = 256;
 	private final int MESSAGE_LENGTH = 10;
@@ -43,6 +47,7 @@ public class BaseStation
 		ultraSonicValue = 0;
 		lightValue = 0;
 		micValue = 0;
+		currentError = new StringBuffer();
 	}
 
 	public void establishConnection() throws NXTCommException, IOException {
@@ -88,6 +93,14 @@ public class BaseStation
 									break;
 								case "SDL":
 									lightValue = Integer.parseInt(message.substring(3,MESSAGE_LENGTH));
+									break;
+								case "ERS":
+									currentError.append(errorMessages[Integer.parseInt(message.substring(
+											MESSAGE_LENGTH-1, MESSAGE_LENGTH))]);                                
+									break;
+								case "ERM":
+									currentError.append(errorMessages[(Integer.parseInt(message.substring(
+											MESSAGE_LENGTH-1, MESSAGE_LENGTH))+1)]);
 									break;
 								}
 							}
@@ -327,5 +340,10 @@ public class BaseStation
 		}
 		command = command + Integer.toString(value);
 		command = command + getChecksum(command);
+	}
+	
+	public void clearErrors()
+	{
+		currentError.setLength(0);
 	}
 }
