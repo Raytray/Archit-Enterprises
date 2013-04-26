@@ -1,3 +1,6 @@
+// TODO: get error messages from BaseStation on each poll, then call clearErrors
+// if an error message is fetched (don't call if no messages)
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -15,6 +18,9 @@ import javax.swing.JPanel;
 import lejos.pc.comm.NXTCommException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JList;
+import javax.swing.JTextPane;
+import javax.swing.JScrollPane;
 
 public class GUI
 {
@@ -25,7 +31,9 @@ public class GUI
 	txtConnectionButtonOn, txtConnectionButtonOff;
 	private JButton buttonExit, buttonSpeed;
 	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed,
-	stopped, valid, valueHolder;
+	stopped, valid, valueHolder, connected;
+	private JTextPane errorPane;
+	private StringBuffer errors;
 	private int speed, previousSpeed;
 	private static GUI window;
 	private final int MAX_SPEED = 720;
@@ -33,6 +41,7 @@ public class GUI
 	private final int SPEED_CHANGE_INCREMENT = 10;
 	public JTextField txtFieldMicrophone, txtFieldLight, txtFieldTouch, txtFieldUltrasonic;
 	private static JLabel architEnterprisesLogo;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Launch the application.
@@ -80,8 +89,10 @@ public class GUI
 		sIsPressed = false;
 		aIsPressed = false;
 		tIsPressed = false;
+		connected = false;
 		speed = 100;
 		station = new BaseStation();
+		errors = new StringBuffer("Error pane initialized.");
 		frame = new JFrame("Control Station");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setSize(500, 500);
@@ -167,7 +178,7 @@ public class GUI
 		txtFieldMicrophone.setText("45");
 		txtFieldMicrophone.setEditable(false);
 		txtFieldMicrophone.setBackground(Color.green);
-		txtFieldMicrophone.setBounds(357, 87, 43, 20);
+		txtFieldMicrophone.setBounds(356, 87, 43, 20);
 		frame.getContentPane().add(txtFieldMicrophone);
 		txtFieldMicrophone.setColumns(10);
 
@@ -175,7 +186,7 @@ public class GUI
 		txtFieldLight.setEditable(false);
 		txtFieldLight.setText("50");
 		txtFieldLight.setBackground(Color.green);
-		txtFieldLight.setBounds(357, 118, 43, 20);
+		txtFieldLight.setBounds(356, 118, 43, 20);
 		frame.getContentPane().add(txtFieldLight);
 		txtFieldLight.setColumns(10);
 
@@ -183,7 +194,7 @@ public class GUI
 		txtFieldTouch.setText("FALSE");
 		txtFieldTouch.setEditable(false);
 		txtFieldTouch.setBackground(Color.green);
-		txtFieldTouch.setBounds(357, 149, 43, 20);
+		txtFieldTouch.setBounds(356, 149, 43, 20);
 		frame.getContentPane().add(txtFieldTouch);
 		txtFieldTouch.setColumns(10);
 
@@ -191,7 +202,7 @@ public class GUI
 		txtFieldUltrasonic.setText("35");
 		txtFieldUltrasonic.setEditable(false);
 		txtFieldUltrasonic.setBackground(Color.green);
-		txtFieldUltrasonic.setBounds(357, 180, 43, 20);
+		txtFieldUltrasonic.setBounds(356, 180, 43, 20);
 		frame.getContentPane().add(txtFieldUltrasonic);
 		txtFieldUltrasonic.setColumns(10);
 
@@ -237,7 +248,7 @@ public class GUI
 
 		inputFieldSpeed = new JTextField();
 		inputFieldSpeed.setText("100");
-		inputFieldSpeed.setBounds(357, 209, 43, 20);
+		inputFieldSpeed.setBounds(356, 209, 43, 20);
 		frame.getContentPane().add(inputFieldSpeed);
 		inputFieldSpeed.setColumns(10);
 
@@ -408,7 +419,7 @@ public class GUI
 				}
 			}
 		});
-		refreshAll.setBounds(287, 62, 172, 23);
+		refreshAll.setBounds(281, 59, 172, 23);
 		frame.getContentPane().add(refreshAll);
 
 		buttonExit = new JButton("Terminate Connection");
@@ -453,6 +464,16 @@ public class GUI
 		buttonSpeed.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		buttonSpeed.setBounds(405, 208, 69, 23);
 		frame.getContentPane().add(buttonSpeed);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 180, 241, 167);
+		frame.getContentPane().add(scrollPane);
+		
+		errorPane = new JTextPane();
+		scrollPane.setViewportView(errorPane);
+		errorPane.setForeground(Color.RED);
+		errorPane.setEditable(false);
+		errorPane.setText(errors.toString());
 	}
 
 	private void makeNewControlListener(Component c)
@@ -509,13 +530,14 @@ public class GUI
 			}
 			catch(IllegalArgumentException e)
 			{
-				System.err.println("Speed must be between " + MIN_SPEED + " and "
+				printError("Speed must be between " + MIN_SPEED + " and "
 						+ MAX_SPEED + " inclusive!");
 				valid = false;
+				speed = previousSpeed;
 			}
 			catch(Exception e)
 			{
-				System.err.println("Invalid speed!");
+				printError("Invalid speed!");
 				valid = false;
 			}
 		}
@@ -665,5 +687,12 @@ public class GUI
 			}
 			stopped = wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed;
 		}
+	}
+	
+	private void printError(String error)
+	{
+//		errorPane.setText(error);
+		errors.append("\n" + error);
+		errorPane.setText(errors.toString());
 	}
 }
