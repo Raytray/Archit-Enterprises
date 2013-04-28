@@ -79,23 +79,29 @@ public class BaseStation
 								{
 								case "SDT":
 									touchValue = Integer.parseInt(message.substring(9,MESSAGE_LENGTH));
+									sendMessage(createACK());
 									break;
 								case "SDU":
 									ultraSonicValue = Integer.parseInt(message.substring(3,MESSAGE_LENGTH));
+									sendMessage(createACK());
 									break;
 								case "SDM":
 									micValue = Integer.parseInt(message.substring(3,MESSAGE_LENGTH));
+									sendMessage(createACK());
 									break;
 								case "SDL":
 									lightValue = Integer.parseInt(message.substring(3,MESSAGE_LENGTH));
+									sendMessage(createACK());
 									break;
 								case "ERS":
 									currentError.append(errorMessages[Integer.parseInt(message.substring(
 											MESSAGE_LENGTH-1, MESSAGE_LENGTH))]);                                
+									sendMessage(createACK());
 									break;
 								case "ERM":
 									currentError.append(errorMessages[(Integer.parseInt(message.substring(
 											MESSAGE_LENGTH-1, MESSAGE_LENGTH))+1)]);
+									sendMessage(createACK());
 									break;
 								}
 							}
@@ -165,6 +171,13 @@ public class BaseStation
 			sendMessage(command);
 		}
 	}
+
+    public void swing() throws IOException
+    {
+	command = "SW00000000";
+	buildCommand(command);
+	sendMessage(command);
+    }
 
 	public void moveForwardLeft() throws IOException
 	{
@@ -339,6 +352,12 @@ public class BaseStation
 		command = command + Integer.toString(value);
 		command = command + getChecksum(command);
 	}
+
+    public String createACK() {
+	String ack = "AK00000000";
+	ack += getChecksum(ack);
+	return ack;
+    }
 	
 	public void clearErrors()
 	{

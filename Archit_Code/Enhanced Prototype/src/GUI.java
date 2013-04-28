@@ -558,6 +558,12 @@ public class GUI
 					speed = MAX_SPEED;
 
 			}
+			if(key == 'q' && !tIsPressed)
+			{
+				txtQ.setBackground(Color.orange);
+				qIsPressed = true;
+				station.swing();
+			}
 			if(key == 't' && !tIsPressed)
 			{
 				txtT.setBackground(Color.orange);
@@ -653,7 +659,7 @@ public class GUI
 		if(valid)
 		{
 			switch(key)
-			{
+			    {//TODO: Break on A and D?
 			case 't':
 				txtT.setBackground(Color.blue);
 				tIsPressed = false;
