@@ -1,6 +1,3 @@
-// TODO: get error messages from BaseStation on each poll, then call clearErrors
-// if an error message is fetched (don't call if no messages)
-
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
@@ -14,6 +11,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.io.IOException;
+
 import javax.swing.JPanel;
 import lejos.pc.comm.NXTCommException;
 import java.awt.event.ActionListener;
@@ -373,9 +371,9 @@ public class GUI {
 					txtFieldUltrasonic.setText(Integer.toString(station
 							.getUltrasonicValue()));
 					if (station.getUltrasonicValue() < 25) {
-						txtFieldUltrasonic.setBackground(Color.green);
-					} else {
 						txtFieldUltrasonic.setBackground(Color.red);
+					} else {
+						txtFieldUltrasonic.setBackground(Color.green);
 					}
 				} catch (IOException | InterruptedException e1) {
 					// TODO Auto-generated catch block
@@ -396,9 +394,9 @@ public class GUI {
 					txtFieldUltrasonic.setText(Integer.toString(station
 							.getUltrasonicValue()));
 					if (station.getUltrasonicValue() < 25) {
-						txtFieldUltrasonic.setBackground(Color.green);
-					} else {
 						txtFieldUltrasonic.setBackground(Color.red);
+					} else {
+						txtFieldUltrasonic.setBackground(Color.green);
 					}
 					valueHolder = station.getTouchValue();
 					if (valueHolder) {
@@ -504,7 +502,7 @@ public class GUI {
 			public void keyReleased(KeyEvent e) {
 				try {
 					controlRelease(e.getKeyChar());
-				} catch (IOException e1) {
+				} catch (IOException | InterruptedException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -613,7 +611,8 @@ public class GUI {
 		}
 	}
 
-	private void controlRelease(char key) throws IOException {
+	private void controlRelease(char key) throws IOException,
+			InterruptedException {
 		if (valid) {
 			switch (key) {// TODO: Break on A and D?
 			case 't':

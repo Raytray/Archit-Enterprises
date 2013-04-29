@@ -297,11 +297,11 @@ public class BaseStation {
 
 	public void setSpeed(int newSpeed) throws IOException, InterruptedException {
 		if (newSpeed < TENS) {
-			command = "SSDT00000" + Integer.toString(newSpeed);
+			command = "SSDR00000" + Integer.toString(newSpeed);
 		} else if (newSpeed < HUNDREDS) {
-			command = "SSDT0000" + Integer.toString(newSpeed);
+			command = "SSDR0000" + Integer.toString(newSpeed);
 		} else {
-			command = "SSDT000" + Integer.toString(newSpeed);
+			command = "SSDR000" + Integer.toString(newSpeed);
 		}
 		command = command + getChecksum(command);
 		sendMessage(command);
@@ -311,7 +311,7 @@ public class BaseStation {
 		buildCommand(0);
 	}
 
-	private void buildCommand(int value) { // TODO check for proper function
+	private void buildCommand(int value) {
 		if (value < TENS) {
 			command = command.substring(0, MESSAGE_LENGTH - 1);
 		} else if (value < HUNDREDS) {
