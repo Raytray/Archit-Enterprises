@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import lejos.pc.comm.NXTCommException;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.JList;
 import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
 
@@ -29,11 +28,11 @@ public class GUI
 	private JTextField txtA, txtD, txtS, txtW, txtT, txtHeaderMovementControls,
 	txtUltrasonic, txtTouch, txtLight, txtMicrophone, inputFieldSpeed, txtSpeed,
 	txtConnectionButtonOn, txtConnectionButtonOff;
-	private JButton buttonExit, buttonSpeed;
+	private JButton buttonExit, refreshSpeed;
 	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed,
-	stopped, valid, valueHolder, connected;
+	stopped, valid, valueHolder, qIsPressed;
 	private JTextPane errorPane;
-	private StringBuffer errors;
+	private String errors;
 	private int speed, previousSpeed;
 	private static GUI window;
 	private final int MAX_SPEED = 720;
@@ -42,6 +41,7 @@ public class GUI
 	public JTextField txtFieldMicrophone, txtFieldLight, txtFieldTouch, txtFieldUltrasonic;
 	private static JLabel architEnterprisesLogo;
 	private JScrollPane scrollPane;
+	private JTextField txtQ;
 
 	/**
 	 * Launch the application.
@@ -89,10 +89,10 @@ public class GUI
 		sIsPressed = false;
 		aIsPressed = false;
 		tIsPressed = false;
-		connected = false;
+		qIsPressed = false;
 		speed = 100;
 		station = new BaseStation();
-		errors = new StringBuffer("Error pane initialized.");
+		errors = "Error pane initialized";
 		frame = new JFrame("Control Station");
 		frame.setBounds(100, 100, 450, 300);
 		frame.setSize(500, 500);
@@ -173,6 +173,16 @@ public class GUI
 		txtT.setEditable(false);
 		txtT.setText("T");
 		txtT.setColumns(10);
+		
+		txtQ = new JTextField();
+		txtQ.setText("Q");
+		txtQ.setHorizontalAlignment(SwingConstants.CENTER);
+		txtQ.setForeground(Color.ORANGE);
+		txtQ.setEditable(false);
+		txtQ.setColumns(10);
+		txtQ.setBackground(Color.BLUE);
+		txtQ.setBounds(375, 41, 40, 40);
+		panel.add(txtQ);
 
 		txtFieldMicrophone = new JTextField();
 		txtFieldMicrophone.setText("45");
@@ -300,8 +310,8 @@ public class GUI
 		btnConnection.setBounds(274, 258, 182, 23);
 		frame.getContentPane().add(btnConnection);
 
-		JButton btnNewButton_1 = new JButton("Refresh");
-		btnNewButton_1.addActionListener(new ActionListener() 
+		JButton refreshMicro = new JButton("Refresh");
+		refreshMicro.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent arg0) 
 			{
@@ -309,8 +319,16 @@ public class GUI
 				{
 					station.getMicrophoneSensor();
 					txtFieldMicrophone.setText(Integer.toString(station.getMicrophoneValue()));
+					if(station.getMicrophoneValue() > 50)
+					{
+						txtFieldMicrophone.setBackground(Color.red);
+					}
+					else
+					{
+						txtFieldMicrophone.setBackground(Color.green);
+					}
 				} 
-				catch (IOException e) 
+				catch (IOException | InterruptedException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -318,12 +336,12 @@ public class GUI
 
 			}
 		});
-		btnNewButton_1.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		btnNewButton_1.setBounds(405, 86, 69, 23);
-		frame.getContentPane().add(btnNewButton_1);
+		refreshMicro.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		refreshMicro.setBounds(405, 86, 69, 23);
+		frame.getContentPane().add(refreshMicro);
 
-		JButton button = new JButton("Refresh");
-		button.addActionListener(new ActionListener() 
+		JButton refreshLight = new JButton("Refresh");
+		refreshLight.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -331,26 +349,35 @@ public class GUI
 				{
 					station.getLightSensor();
 					txtFieldLight.setText(Integer.toString(station.getLightValue()));
+					if(station.getLightValue() < 50)
+					{
+						txtFieldLight.setBackground(Color.red);
+					}
+					else
+					{
+						txtFieldLight.setBackground(Color.green);
+					}
 				} 
-				catch (IOException e1) 
+				catch (IOException | InterruptedException e1) 
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
-		button.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		button.setBounds(405, 117, 69, 23);
-		frame.getContentPane().add(button);
+		refreshLight.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		refreshLight.setBounds(405, 117, 69, 23);
+		frame.getContentPane().add(refreshLight);
 
-		JButton button_1 = new JButton("Refresh");
-		button_1.addActionListener(new ActionListener() 
+		JButton refreshTouch = new JButton("Refresh");
+		refreshTouch.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
 				try 
 				{
 					station.getTouchSensor();
+					Thread.sleep(250);
 					valueHolder = station.getTouchValue();
 					if(valueHolder)
 					{
@@ -363,19 +390,19 @@ public class GUI
 						txtFieldTouch.setBackground(Color.green);
 					}
 				} 
-				catch (IOException e1) 
+				catch (IOException | InterruptedException e1) 
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
-		button_1.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		button_1.setBounds(405, 148, 69, 23);
-		frame.getContentPane().add(button_1);
+		refreshTouch.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		refreshTouch.setBounds(405, 148, 69, 23);
+		frame.getContentPane().add(refreshTouch);
 
-		JButton button_2 = new JButton("Refresh");
-		button_2.addActionListener(new ActionListener() 
+		JButton refreshUltra = new JButton("Refresh");
+		refreshUltra.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -383,7 +410,7 @@ public class GUI
 				{
 					station.getUltraSensor();
 					txtFieldUltrasonic.setText(Integer.toString(station.getUltrasonicValue()));
-					if(station.getUltrasonicValue() > 50)
+					if(station.getUltrasonicValue() < 25)
 					{
 						txtFieldUltrasonic.setBackground(Color.green);
 					}
@@ -392,16 +419,16 @@ public class GUI
 						txtFieldUltrasonic.setBackground(Color.red);
 					}
 				} 
-				catch (IOException e1)
+				catch (IOException | InterruptedException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 		});
-		button_2.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		button_2.setBounds(405, 179, 69, 23);
-		frame.getContentPane().add(button_2);
+		refreshUltra.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		refreshUltra.setBounds(405, 179, 69, 23);
+		frame.getContentPane().add(refreshUltra);
 
 		JButton refreshAll = new JButton("Refresh All Sensors");
 		refreshAll.addActionListener(new ActionListener() 
@@ -411,8 +438,47 @@ public class GUI
 				try 
 				{
 					station.readSensors();
+					Thread.sleep(250);
+					txtFieldUltrasonic.setText(Integer.toString(station.getUltrasonicValue()));
+					if(station.getUltrasonicValue() < 25)
+					{
+						txtFieldUltrasonic.setBackground(Color.green);
+					}
+					else
+					{
+						txtFieldUltrasonic.setBackground(Color.red);
+					}
+					valueHolder = station.getTouchValue();
+					if(valueHolder)
+					{
+						txtFieldTouch.setText("TRUE");
+						txtFieldTouch.setBackground(Color.red);
+					}
+					else
+					{
+						txtFieldTouch.setText("FALSE");
+						txtFieldTouch.setBackground(Color.green);
+					}
+					txtFieldLight.setText(Integer.toString(station.getLightValue()));
+					if(station.getLightValue() < 50)
+					{
+						txtFieldLight.setBackground(Color.red);
+					}
+					else
+					{
+						txtFieldLight.setBackground(Color.green);
+					}
+					txtFieldMicrophone.setText(Integer.toString(station.getMicrophoneValue()));
+					if(station.getMicrophoneValue() > 50)
+					{
+						txtFieldMicrophone.setBackground(Color.red);
+					}
+					else
+					{
+						txtFieldMicrophone.setBackground(Color.green);
+					}
 				} 
-				catch (IOException e) 
+				catch (IOException | InterruptedException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -432,7 +498,7 @@ public class GUI
 					station.exitRobot();
 					System.exit(0);
 				} 
-				catch (IOException e) 
+				catch (IOException | InterruptedException e) 
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -442,8 +508,8 @@ public class GUI
 		buttonExit.setBounds(274, 323, 182, 23);
 		frame.getContentPane().add(buttonExit);
 
-		buttonSpeed = new JButton("Refresh");
-		buttonSpeed.addActionListener(new ActionListener() 
+		refreshSpeed = new JButton("Refresh");
+		refreshSpeed.addActionListener(new ActionListener() 
 		{
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -458,12 +524,15 @@ public class GUI
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (InterruptedException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
 				}
 			}
 		});
-		buttonSpeed.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		buttonSpeed.setBounds(405, 208, 69, 23);
-		frame.getContentPane().add(buttonSpeed);
+		refreshSpeed.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		refreshSpeed.setBounds(405, 208, 69, 23);
+		frame.getContentPane().add(refreshSpeed);
 		
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 180, 241, 167);
@@ -474,6 +543,17 @@ public class GUI
 		errorPane.setForeground(Color.RED);
 		errorPane.setEditable(false);
 		errorPane.setText(errors.toString());
+		
+		JButton btnError = new JButton("Refresh Errors ");
+		btnError.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				errors = station.getErrors();
+				station.clearErrors();
+				printError(errors);
+			}
+		});
+		btnError.setBounds(50, 148, 157, 23);
+		frame.getContentPane().add(btnError);
 	}
 
 	private void makeNewControlListener(Component c)
@@ -486,7 +566,7 @@ public class GUI
 				try 
 				{
 					controlPress(e.getKeyChar());
-				} catch (IOException e1) 
+				} catch (IOException | InterruptedException e1) 
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -506,7 +586,7 @@ public class GUI
 		});
 	}
 
-	private void controlPress(char key) throws IOException
+	private void controlPress(char key) throws IOException, InterruptedException
 	{
 		previousSpeed = speed;
 		if(key != ',' && key != '.')
@@ -558,7 +638,7 @@ public class GUI
 					speed = MAX_SPEED;
 
 			}
-			if(key == 'q' && !tIsPressed)
+			if(key == 'q' && !qIsPressed)
 			{
 				txtQ.setBackground(Color.orange);
 				qIsPressed = true;
@@ -647,15 +727,6 @@ public class GUI
 
 	private void controlRelease(char key) throws IOException
 	{
-		valueHolder = station.getTouchValue();
-		if(valueHolder)
-		{
-			txtFieldTouch.setText("true");
-		}
-		else
-		{
-			txtFieldTouch.setText("false");
-		}
 		if(valid)
 		{
 			switch(key)
@@ -663,6 +734,10 @@ public class GUI
 			case 't':
 				txtT.setBackground(Color.blue);
 				tIsPressed = false;
+				break;
+			case 'q':
+				txtQ.setBackground(Color.blue);
+				qIsPressed = false;
 				break;
 			case 'w':
 				txtW.setBackground(Color.blue);
@@ -680,7 +755,7 @@ public class GUI
 				txtD.setBackground(Color.blue);
 				dIsPressed = false;
 			}
-			if(!stopped && key != 't')
+			if(!stopped && key != 't' && key != 'q')
 			{
 				try
 				{
@@ -697,8 +772,6 @@ public class GUI
 	
 	private void printError(String error)
 	{
-//		errorPane.setText(error);
-		errors.append("\n" + error);
-		errorPane.setText(errors.toString());
+		errorPane.setText(error);
 	}
 }
