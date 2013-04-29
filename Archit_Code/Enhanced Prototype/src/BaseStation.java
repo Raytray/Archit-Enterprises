@@ -1,4 +1,3 @@
- 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -44,16 +43,16 @@ public class BaseStation {
 	public void establishConnection() throws NXTCommException, IOException {
 		connection = NXTCommFactory.createNXTComm(NXTCommFactory.BLUETOOTH);
 		info = new NXTInfo(NXTCommFactory.BLUETOOTH, "TROGDOR",
-			"00:16:53:13:E6:74");
-		//info = new NXTInfo(NXTCommFactory.BLUETOOTH, "NXT",
-		//"00:16:53:13:D3:FC");
+				"00:16:53:13:E6:74");
+		// info = new NXTInfo(NXTCommFactory.BLUETOOTH, "NXT",
+		// "00:16:53:13:D3:FC");
 
 		connection.open(info);
 		os = connection.getOutputStream();
 		is = connection.getInputStream();
 		iHandle = new DataInputStream(is);
 		oHandle = new DataOutputStream(os);
-		
+
 		PCreceiver = new Thread() {
 			public void run() {
 				byte[] buffer;
@@ -89,11 +88,23 @@ public class BaseStation {
 									createACK();
 									break;
 								case "ERS":
-									currentErrors = currentErrors + "\n" + errorMessages[Integer.parseInt(message.substring(9, MESSAGE_LENGTH))];
+									currentErrors = currentErrors
+											+ "\n"
+											+ errorMessages[Integer
+													.parseInt(message
+															.substring(9,
+																	MESSAGE_LENGTH))];
 									createACK();
 									break;
 								case "ERM":
-									currentErrors = currentErrors + "\n" + errorMessages[OFFSET + Integer.parseInt(message.substring(9,MESSAGE_LENGTH))];
+									currentErrors = currentErrors
+											+ "\n"
+											+ errorMessages[OFFSET
+													+ Integer
+															.parseInt(message
+																	.substring(
+																			9,
+																			MESSAGE_LENGTH))];
 									createACK();
 									break;
 								}
@@ -113,7 +124,8 @@ public class BaseStation {
 		PCreceiver.start();
 	}
 
-	public void sendMessage(String message) throws IOException, InterruptedException {
+	public void sendMessage(String message) throws IOException,
+			InterruptedException {
 		oHandle.write(message.getBytes());
 		oHandle.flush();
 	}
@@ -133,7 +145,7 @@ public class BaseStation {
 	public void turnLeft(int degrees) throws IOException, InterruptedException {
 		if (degrees < 0) {
 			turnRight(degrees * (-1));
-		} else if (degrees == 0){
+		} else if (degrees == 0) {
 			command = "TNL0000000";
 			buildCommand();
 			sendMessage(command);
@@ -147,7 +159,7 @@ public class BaseStation {
 	public void turnRight(int degrees) throws IOException, InterruptedException {
 		if (degrees < 0) {
 			turnLeft(degrees * (-1));
-		} else if (degrees == 0){
+		} else if (degrees == 0) {
 			command = "TNR0000000";
 			buildCommand();
 			sendMessage(command);
@@ -272,7 +284,7 @@ public class BaseStation {
 	public int getUltrasonicValue() {
 		return ultraSonicValue;
 	}
-	
+
 	public String getErrors() {
 		return currentErrors;
 	}
