@@ -19,15 +19,16 @@ import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.JScrollPane;
 
-public class GUI {
+public class GUI 
+{
 	private BaseStation station;
 	private JFrame frame;
 	private JTextField txtA, txtD, txtS, txtW, txtT, txtHeaderMovementControls,
-			txtUltrasonic, txtTouch, txtLight, txtMicrophone, inputFieldSpeed,
-			txtSpeed, txtConnectionButtonOn, txtConnectionButtonOff;
-	private JButton buttonExit, refreshSpeed;
+	txtUltrasonic, txtTouch, txtLight, txtMicrophone, inputFieldSpeed,
+	txtSpeed, txtConnectionOn, txtConnectionOff;
+	private JButton btnTerminateConnection, refreshSpeed;
 	private boolean wIsPressed, aIsPressed, sIsPressed, dIsPressed, tIsPressed,
-			stopped, valid, valueHolder, qIsPressed;
+	stopped, valid, valueHolder, qIsPressed;
 	private JTextPane errorPane;
 	private String errors;
 	private int speed, previousSpeed;
@@ -36,7 +37,7 @@ public class GUI {
 	private final int MIN_SPEED = 0;
 	private final int SPEED_CHANGE_INCREMENT = 10;
 	public JTextField txtFieldMicrophone, txtFieldLight, txtFieldTouch,
-			txtFieldUltrasonic;
+	txtFieldUltrasonic;
 	private static JLabel architEnterprisesLogo;
 	private JScrollPane scrollPane;
 	private JTextField txtQ;
@@ -44,13 +45,19 @@ public class GUI {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
+	public static void main(String[] args) 
+	{
+		EventQueue.invokeLater(new Runnable() 
+		{
+			public void run() 
+			{
+				try 
+				{
 					window = new GUI();
 					window.frame.setVisible(true);
-				} catch (Exception e) {
+				} 
+				catch (Exception e) 
+				{
 					e.printStackTrace();
 				}
 			}
@@ -63,7 +70,8 @@ public class GUI {
 	 * @throws NXTCommException
 	 * @throws IOException
 	 */
-	public GUI() throws NXTCommException, IOException {
+	public GUI() throws NXTCommException, IOException 
+	{
 		initialize();
 	}
 
@@ -73,7 +81,8 @@ public class GUI {
 	 * @throws NXTCommException
 	 * @throws IOException
 	 */
-	private void initialize() throws NXTCommException, IOException {
+	private void initialize() throws NXTCommException, IOException 
+	{
 		wIsPressed = false;
 		dIsPressed = false;
 		sIsPressed = false;
@@ -81,6 +90,7 @@ public class GUI {
 		tIsPressed = false;
 		qIsPressed = false;
 		speed = 100;
+		previousSpeed = 100;
 		station = new BaseStation();
 		errors = "Error pane initialized";
 		frame = new JFrame("Control Station");
@@ -89,7 +99,7 @@ public class GUI {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
 		frame.setFocusable(true);
-		makeNewControlListener(frame);
+		makeControlListener(frame);
 
 		JPanel panel = new JPanel();
 		panel.setBounds(10, 358, 464, 92);
@@ -99,8 +109,7 @@ public class GUI {
 		architEnterprisesLogo = new JLabel();
 		architEnterprisesLogo.setBounds(35, 0, 400, 50);
 		frame.getContentPane().add(architEnterprisesLogo);
-		architEnterprisesLogo.setIcon(new javax.swing.ImageIcon(
-				"src/Archit_Logo.png"));
+		architEnterprisesLogo.setIcon(new javax.swing.ImageIcon("src/Archit_Logo.png"));
 		txtA = new JTextField();
 		txtA.setForeground(Color.ORANGE);
 		txtA.setBounds(0, 67, 86, 20);
@@ -151,7 +160,7 @@ public class GUI {
 		txtHeaderMovementControls.setEditable(false);
 		txtHeaderMovementControls.setText("Click for Movement Controls");
 		txtHeaderMovementControls.setColumns(10);
-		makeNewControlListener(txtHeaderMovementControls);
+		makeControlListener(txtHeaderMovementControls);
 
 		txtT = new JTextField();
 		txtT.setBounds(328, 41, 40, 40);
@@ -261,31 +270,52 @@ public class GUI {
 		txtSpeed.setBounds(261, 209, 86, 20);
 		frame.getContentPane().add(txtSpeed);
 
-		txtConnectionButtonOn = new JTextField();
-		txtConnectionButtonOn.setEditable(false);
-		txtConnectionButtonOn.setHorizontalAlignment(SwingConstants.CENTER);
-		txtConnectionButtonOn.setText("On");
-		txtConnectionButtonOn.setBounds(274, 292, 86, 20);
-		frame.getContentPane().add(txtConnectionButtonOn);
-		txtConnectionButtonOn.setColumns(10);
+		txtConnectionOn = new JTextField();
+		txtConnectionOn.setEditable(false);
+		txtConnectionOn.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConnectionOn.setText("On");
+		txtConnectionOn.setBounds(274, 292, 86, 20);
+		frame.getContentPane().add(txtConnectionOn);
+		txtConnectionOn.setColumns(10);
 
-		txtConnectionButtonOff = new JTextField();
-		txtConnectionButtonOff.setHorizontalAlignment(SwingConstants.CENTER);
-		txtConnectionButtonOff.setText("Off");
-		txtConnectionButtonOff.setEditable(false);
-		txtConnectionButtonOff.setBounds(370, 292, 86, 20);
-		frame.getContentPane().add(txtConnectionButtonOff);
-		txtConnectionButtonOff.setColumns(10);
-		txtConnectionButtonOff.setBackground(Color.red);
+		txtConnectionOff = new JTextField();
+		txtConnectionOff.setHorizontalAlignment(SwingConstants.CENTER);
+		txtConnectionOff.setText("Off");
+		txtConnectionOff.setEditable(false);
+		txtConnectionOff.setBounds(370, 292, 86, 20);
+		frame.getContentPane().add(txtConnectionOff);
+		txtConnectionOff.setColumns(10);
+		txtConnectionOff.setBackground(Color.red);
+
+		makeControlListener(txtFieldMicrophone);
+		makeControlListener(txtFieldLight);
+		makeControlListener(txtFieldUltrasonic);
+		makeControlListener(txtFieldTouch);
+		makeControlListener(txtA);
+		makeControlListener(txtS);
+		makeControlListener(txtD);
+		makeControlListener(txtW);
+		makeControlListener(txtT);
+		makeControlListener(txtQ);
+		makeControlListener(txtMicrophone);
+		makeControlListener(txtSpeed);
+		makeControlListener(txtUltrasonic);
+		makeControlListener(txtTouch);
+		makeControlListener(txtLight);
 
 		JButton btnConnection = new JButton("Initiate Connection");
-		btnConnection.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
+		btnConnection.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
 					station.establishConnection();
-					txtConnectionButtonOn.setBackground(Color.green);
-					txtConnectionButtonOff.setBackground(Color.lightGray);
-				} catch (NXTCommException | IOException e) {
+					txtConnectionOn.setBackground(Color.green);
+					txtConnectionOff.setBackground(Color.lightGray);
+				} 
+				catch (NXTCommException | IOException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -293,20 +323,29 @@ public class GUI {
 		});
 		btnConnection.setBounds(274, 258, 182, 23);
 		frame.getContentPane().add(btnConnection);
+		makeControlListener(btnConnection);
 
 		JButton refreshMicro = new JButton("Refresh");
-		refreshMicro.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
+		refreshMicro.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
 					station.getMicrophoneSensor();
 					txtFieldMicrophone.setText(Integer.toString(station
 							.getMicrophoneValue()));
-					if (station.getMicrophoneValue() > 50) {
+					if (station.getMicrophoneValue() > 50) 
+					{
 						txtFieldMicrophone.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldMicrophone.setBackground(Color.green);
 					}
-				} catch (IOException | InterruptedException e) {
+				} 
+				catch (IOException | InterruptedException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -318,18 +357,26 @@ public class GUI {
 		frame.getContentPane().add(refreshMicro);
 
 		JButton refreshLight = new JButton("Refresh");
-		refreshLight.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		refreshLight.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.getLightSensor();
 					txtFieldLight.setText(Integer.toString(station
 							.getLightValue()));
-					if (station.getLightValue() < 50) {
+					if (station.getLightValue() < 50) 
+					{
 						txtFieldLight.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldLight.setBackground(Color.green);
 					}
-				} catch (IOException | InterruptedException e1) {
+				} 
+				catch (IOException | InterruptedException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -340,20 +387,28 @@ public class GUI {
 		frame.getContentPane().add(refreshLight);
 
 		JButton refreshTouch = new JButton("Refresh");
-		refreshTouch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		refreshTouch.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.getTouchSensor();
 					Thread.sleep(250);
 					valueHolder = station.getTouchValue();
-					if (valueHolder) {
+					if (valueHolder) 
+					{
 						txtFieldTouch.setText("TRUE");
 						txtFieldTouch.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldTouch.setText("FALSE");
 						txtFieldTouch.setBackground(Color.green);
 					}
-				} catch (IOException | InterruptedException e1) {
+				} 
+				catch (IOException | InterruptedException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -364,18 +419,26 @@ public class GUI {
 		frame.getContentPane().add(refreshTouch);
 
 		JButton refreshUltra = new JButton("Refresh");
-		refreshUltra.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		refreshUltra.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.getUltraSensor();
 					txtFieldUltrasonic.setText(Integer.toString(station
 							.getUltrasonicValue()));
-					if (station.getUltrasonicValue() < 25) {
+					if (station.getUltrasonicValue() < 25) 
+					{
 						txtFieldUltrasonic.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldUltrasonic.setBackground(Color.green);
 					}
-				} catch (IOException | InterruptedException e1) {
+				} 
+				catch (IOException | InterruptedException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -386,41 +449,58 @@ public class GUI {
 		frame.getContentPane().add(refreshUltra);
 
 		JButton refreshAll = new JButton("Refresh All Sensors");
-		refreshAll.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
+		refreshAll.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
 					station.readSensors();
 					Thread.sleep(250);
 					txtFieldUltrasonic.setText(Integer.toString(station
 							.getUltrasonicValue()));
-					if (station.getUltrasonicValue() < 25) {
+					if (station.getUltrasonicValue() < 25) 
+					{
 						txtFieldUltrasonic.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldUltrasonic.setBackground(Color.green);
 					}
 					valueHolder = station.getTouchValue();
-					if (valueHolder) {
+					if (valueHolder) 
+					{
 						txtFieldTouch.setText("TRUE");
 						txtFieldTouch.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldTouch.setText("FALSE");
 						txtFieldTouch.setBackground(Color.green);
 					}
 					txtFieldLight.setText(Integer.toString(station
 							.getLightValue()));
-					if (station.getLightValue() < 50) {
+					if (station.getLightValue() < 50) 
+					{
 						txtFieldLight.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldLight.setBackground(Color.green);
 					}
 					txtFieldMicrophone.setText(Integer.toString(station
 							.getMicrophoneValue()));
-					if (station.getMicrophoneValue() > 50) {
+					if (station.getMicrophoneValue() > 50) 
+					{
 						txtFieldMicrophone.setBackground(Color.red);
-					} else {
+					} 
+					else 
+					{
 						txtFieldMicrophone.setBackground(Color.green);
 					}
-				} catch (IOException | InterruptedException e) {
+				} 
+				catch (IOException | InterruptedException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -429,33 +509,48 @@ public class GUI {
 		refreshAll.setBounds(281, 59, 172, 23);
 		frame.getContentPane().add(refreshAll);
 
-		buttonExit = new JButton("Terminate Connection");
-		buttonExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				try {
+		btnTerminateConnection = new JButton("Terminate Connection");
+		btnTerminateConnection.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent arg0) 
+			{
+				try 
+				{
 					station.exitRobot();
 					System.exit(0);
-				} catch (IOException | InterruptedException e) {
+				} 
+				catch (IOException | InterruptedException e) 
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		});
-		buttonExit.setBounds(274, 323, 182, 23);
-		frame.getContentPane().add(buttonExit);
+		btnTerminateConnection.setBounds(274, 323, 182, 23);
+		frame.getContentPane().add(btnTerminateConnection);
+		makeControlListener(btnTerminateConnection);
 
 		refreshSpeed = new JButton("Refresh");
-		refreshSpeed.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				try {
+		refreshSpeed.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
+				try 
+				{
 					station.setSpeed(Integer.parseInt(inputFieldSpeed.getText()));
-				} catch (NumberFormatException e1) {
+				} 
+				catch (NumberFormatException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (IOException e1) {
+				} 
+				catch (IOException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				} catch (InterruptedException e2) {
+				} 
+				catch (InterruptedException e2) 
+				{
 					// TODO Auto-generated catch block
 					e2.printStackTrace();
 				}
@@ -474,35 +569,56 @@ public class GUI {
 		errorPane.setForeground(Color.RED);
 		errorPane.setEditable(false);
 		errorPane.setText(errors.toString());
+		makeControlListener(errorPane);
 
-		JButton btnError = new JButton("Refresh Errors ");
-		btnError.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		JButton btnRefreshErrors = new JButton("Refresh Errors ");
+		btnRefreshErrors.addActionListener(new ActionListener() 
+		{
+			public void actionPerformed(ActionEvent e) 
+			{
 				errors = station.getErrors();
 				station.clearErrors();
 				printError(errors);
 			}
 		});
-		btnError.setBounds(50, 148, 157, 23);
-		frame.getContentPane().add(btnError);
+		btnRefreshErrors.setBounds(50, 148, 157, 23);
+		frame.getContentPane().add(btnRefreshErrors);
+		makeControlListener(btnRefreshErrors);
+		makeControlListener(refreshAll);
+		makeControlListener(refreshMicro);
+		makeControlListener(refreshUltra);
+		makeControlListener(refreshSpeed);
+		makeControlListener(refreshTouch);
+		makeControlListener(refreshLight);
+		makeControlListener(txtConnectionOff);
+		makeControlListener(txtConnectionOn);
 	}
 
-	private void makeNewControlListener(Component c) {
-		c.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				try {
+	private void makeControlListener(Component c) 
+	{
+		c.addKeyListener(new KeyAdapter() 
+		{
+			public void keyPressed(KeyEvent e) 
+			{
+				try 
+				{
 					controlPress(e.getKeyChar());
-				} catch (IOException | InterruptedException e1) {
+				} 
+				catch (IOException | InterruptedException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 
-			public void keyReleased(KeyEvent e) {
-				try {
+			public void keyReleased(KeyEvent e) 
+			{
+				try 
+				{
 					controlRelease(e.getKeyChar());
-				} catch (IOException | InterruptedException e1) {
+				} 
+				catch (IOException | InterruptedException e1) 
+				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
@@ -510,111 +626,155 @@ public class GUI {
 		});
 	}
 
-	private void controlPress(char key) throws IOException,
-			InterruptedException {
+	private void controlPress(char key) throws IOException, InterruptedException 
+	{
 		previousSpeed = speed;
-		if (key != ',' && key != '.') {
-			try {
+		if (key != ',' && key != '.') 
+		{
+			try 
+			{
 				speed = Integer.parseInt(inputFieldSpeed.getText());
-				if (speed < MIN_SPEED) {
+				if (speed < MIN_SPEED) 
+				{
 					speed = previousSpeed;
 					inputFieldSpeed.setText(String.valueOf(speed));
 					throw new IllegalArgumentException();
 				}
-				if (speed > MAX_SPEED) {
+				if (speed > MAX_SPEED) 
+				{
 					speed = MAX_SPEED;
 					inputFieldSpeed.setText(String.valueOf(speed));
 					throw new IllegalArgumentException();
 				}
 				valid = true;
-			} catch (IllegalArgumentException e) {
+			} 
+			catch (IllegalArgumentException e) 
+			{
 				printError("Speed must be between " + MIN_SPEED + " and "
-						+ MAX_SPEED + " inclusive!");
+						+ MAX_SPEED + " inclusive! Speed has been reset.");
 				valid = false;
 				speed = previousSpeed;
-			} catch (Exception e) {
-				printError("Invalid speed!");
+				inputFieldSpeed.setText(Integer.toString(speed));
+			} 
+			catch (Exception e) 
+			{
+				printError("Invalid speed! Speed has been reset.");
 				valid = false;
+				speed = previousSpeed;
+				inputFieldSpeed.setText(Integer.toString(speed));
 			}
 		}
-		if (valid) {
-			if (key == ',' && speed > MIN_SPEED) {
+		if (valid) 
+		{
+			if (key == ',' && speed > MIN_SPEED) 
+			{
 				if (speed >= MIN_SPEED + SPEED_CHANGE_INCREMENT)
 					speed -= SPEED_CHANGE_INCREMENT;
 				else
 					speed = MIN_SPEED;
 			}
-			if (key == '.' && speed < MAX_SPEED) {
+			if (key == '.' && speed < MAX_SPEED) 
+			{
 				if (speed <= MAX_SPEED - SPEED_CHANGE_INCREMENT)
 					speed += SPEED_CHANGE_INCREMENT;
 				else
 					speed = MAX_SPEED;
 
 			}
-			if (key == 'q' && !qIsPressed) {
+			if (key == 'q' && !qIsPressed) 
+			{
 				txtQ.setBackground(Color.orange);
 				qIsPressed = true;
 				station.swing();
 			}
-			if (key == 't' && !tIsPressed) {
+			if (key == 't' && !tIsPressed) 
+			{
 				txtT.setBackground(Color.orange);
 				tIsPressed = true;
 				station.turnRight(180);
 			}
-			if (key == 'w' && !wIsPressed && !sIsPressed) {
+			if (key == 'w' && !wIsPressed && !sIsPressed) 
+			{
 				txtW.setBackground(Color.orange);
 				wIsPressed = true;
-				if (aIsPressed) {
+				if (aIsPressed) 
+				{
 					station.moveForwardLeft();
-				} else if (dIsPressed) {
+				} 
+				else if (dIsPressed) 
+				{
 					station.moveForwardRight();
-				} else {
+				} 
+				else 
+				{
 					station.moveForward();
 				}
 
 			}
-			if (key == 'd' && !dIsPressed && !aIsPressed) {
+			if (key == 'd' && !dIsPressed && !aIsPressed) 
+			{
 				txtD.setBackground(Color.orange);
 				dIsPressed = true;
-				if (wIsPressed) {
+				if (wIsPressed) 
+				{
 					station.moveForwardRight();
-				} else if (sIsPressed) {
+				} 
+				else if (sIsPressed) 
+				{
 					station.moveBackwardRight();
-				} else {
+				}
+				else 
+				{
 					station.turnRight(0);
 				}
 			}
-			if (key == 'a' && !aIsPressed && !dIsPressed) {
+			if (key == 'a' && !aIsPressed && !dIsPressed) 
+			{
 				txtA.setBackground(Color.orange);
 				aIsPressed = true;
-				if (wIsPressed) {
+				if (wIsPressed) 
+				{
 					station.moveForwardLeft();
-				} else if (sIsPressed) {
+				} 
+				else if (sIsPressed) 
+				{
 					station.moveBackwardLeft();
-				} else {
+				} 
+				else 
+				{
 					station.turnLeft(0);
 				}
 			}
-			if (key == 's' && !sIsPressed && !wIsPressed) {
+			if (key == 's' && !sIsPressed && !wIsPressed) 
+			{
 				txtS.setBackground(Color.orange);
 				sIsPressed = true;
-				if (aIsPressed) {
+				if (aIsPressed) 
+				{
 					station.moveBackwardLeft();
-				} else if (dIsPressed) {
+				} 
+				else if (dIsPressed) 
+				{
 					station.moveBackwardRight();
-				} else {
+				} 
+				else 
+				{
 					station.moveBackward();
 				}
 			}
-			stopped = !(wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed);
+			stopped = !(wIsPressed || aIsPressed || sIsPressed || dIsPressed || tIsPressed
+					|| qIsPressed);
 			inputFieldSpeed.setText(String.valueOf(speed));
 		}
 	}
 
 	private void controlRelease(char key) throws IOException,
-			InterruptedException {
-		if (valid) {
-			switch (key) {// TODO: Break on A and D?
+	InterruptedException 
+	{
+		if (valid) 
+		{
+			switch (key) 
+			{// TODO: Break on A and D?
 			case 't':
 				txtT.setBackground(Color.blue);
 				tIsPressed = false;
@@ -626,11 +786,11 @@ public class GUI {
 			case 'w':
 				txtW.setBackground(Color.blue);
 				wIsPressed = false;
-				if (!stopped)
-					break;
+				break;
 			case 'a':
 				txtA.setBackground(Color.blue);
 				aIsPressed = false;
+				break;
 			case 's':
 				txtS.setBackground(Color.blue);
 				sIsPressed = false;
@@ -638,20 +798,26 @@ public class GUI {
 			case 'd':
 				txtD.setBackground(Color.blue);
 				dIsPressed = false;
+				break;
 			}
-			if (!stopped && key != 't' && key != 'q') {
-				try {
+			if (!stopped && key != 't' && key != 'q') 
+			{
+				try 
+				{
 					station.stop();
-				} catch (Exception e) {
+				} 
+				catch (Exception e) 
+				{
 					e.printStackTrace();
 				}
 			}
-			stopped = wIsPressed || aIsPressed || sIsPressed || dIsPressed
-					|| tIsPressed;
+			stopped = !(wIsPressed || aIsPressed || sIsPressed || dIsPressed
+					|| tIsPressed || qIsPressed);
 		}
 	}
 
-	private void printError(String error) {
+	private void printError(String error) 
+	{
 		errorPane.setText(error);
 	}
 }
